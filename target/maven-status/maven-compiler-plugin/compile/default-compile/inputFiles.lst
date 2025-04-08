@@ -37,6 +37,7 @@
 /home/runner/workspace/src/main/java/com/busmanagement/controller/AdminController.java
 /home/runner/workspace/src/main/java/com/busmanagement/service/BookingService.java
 /home/runner/workspace/src/main/java/com/busmanagement/service/UserService.java
+/home/runner/workspace/src/main/java/com/busmanagement/controller/IndexController.java
 /home/runner/workspace/src/main/java/com/busmanagement/observer/NotificationPublisher.java
 /home/runner/workspace/src/main/java/com/busmanagement/repository/RoleRepository.java
 /home/runner/workspace/src/main/java/com/busmanagement/service/NotificationService.java

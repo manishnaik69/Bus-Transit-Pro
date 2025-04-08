@@ -3,6 +3,7 @@ com/busmanagement/model/Route.class
 com/busmanagement/config/CustomUserDetailsService.class
 com/busmanagement/controller/PaymentController.class
 com/busmanagement/controller/MaintenanceController.class
+com/busmanagement/controller/IndexController.class
 com/busmanagement/util/Constants.class
 com/busmanagement/service/BusService.class
 com/busmanagement/dto/RegistrationDTO.class
