@@ -93,7 +93,7 @@ public class RouteServiceImpl implements RouteService {
         route.setSource(source);
         route.setDestination(destination);
         route.setDistance(routeDTO.getDistance());
-        route.setDuration(routeDTO.getDuration());
+        route.setEstimatedDuration(routeDTO.getDuration().intValue());
         route.setFareAmount(routeDTO.getFareAmount());
         
         if (!validateRoute(route)) {
@@ -152,7 +152,7 @@ public class RouteServiceImpl implements RouteService {
         existingRoute.setSource(source);
         existingRoute.setDestination(destination);
         existingRoute.setDistance(routeDTO.getDistance());
-        existingRoute.setDuration(routeDTO.getDuration());
+        existingRoute.setEstimatedDuration(routeDTO.getDuration().intValue());
         existingRoute.setFareAmount(routeDTO.getFareAmount());
         
         if (!validateRoute(existingRoute)) {
@@ -197,7 +197,7 @@ public class RouteServiceImpl implements RouteService {
         }
         
         // Check if duration is valid
-        if (route.getDuration() == null || route.getDuration() <= 0) {
+        if (route.getEstimatedDuration() == null || route.getEstimatedDuration() <= 0) {
             return false;
         }
         

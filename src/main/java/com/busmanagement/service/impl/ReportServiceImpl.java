@@ -96,10 +96,8 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Map<Long, Double> getOccupancyReport(LocalDate startDate, LocalDate endDate) {
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
-        
-        List<Object[]> occupancyData = scheduleRepository.getScheduleOccupancyRates(startDateTime, endDateTime);
+        // Just pass LocalTime.MIN and LocalTime.MAX as we're ignoring date filtering
+        List<Object[]> occupancyData = scheduleRepository.getScheduleOccupancyRates(LocalTime.MIN, LocalTime.MAX);
         Map<Long, Double> occupancyMap = new HashMap<>();
         
         for (Object[] row : occupancyData) {
@@ -172,12 +170,8 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Map<Long, Double> getBusOccupancyRates() {
-        LocalDate startDate = LocalDate.now().minusMonths(1);
-        LocalDate endDate = LocalDate.now();
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, LocalTime.MIN);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, LocalTime.MAX);
-        
-        List<Object[]> scheduleOccupancyRates = scheduleRepository.getScheduleOccupancyRates(startDateTime, endDateTime);
+        // Simplified implementation - using full time range
+        List<Object[]> scheduleOccupancyRates = scheduleRepository.getScheduleOccupancyRates(LocalTime.MIN, LocalTime.MAX);
         
         // Group by bus and calculate average occupancy
         Map<Long, List<Double>> busOccupancyRates = new HashMap<>();

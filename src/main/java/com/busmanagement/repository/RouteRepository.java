@@ -15,6 +15,21 @@ import java.util.List;
 @Repository
 public interface RouteRepository extends JpaRepository<Route, Long> {
     /**
+     * Find routes by source and destination IDs
+     * @param sourceId Source city ID
+     * @param destinationId Destination city ID
+     * @return List of routes
+     */
+    List<Route> findBySourceIdAndDestinationId(Long sourceId, Long destinationId);
+    
+    /**
+     * Find the average fare amount across all routes
+     * @return Average fare amount
+     */
+    @Query("SELECT AVG(r.fareAmount) FROM Route r")
+    Double getAverageFareAmount();
+    
+    /**
      * Find most popular routes based on booking count
      * @param startDate Start date for booking range
      * @param endDate End date for booking range

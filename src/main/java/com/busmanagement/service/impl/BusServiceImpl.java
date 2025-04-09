@@ -45,7 +45,14 @@ public class BusServiceImpl implements BusService {
 
     @Override
     public List<Bus> findBusesByType(String type) {
-        return busRepository.findByType(type);
+        // Convert string to enum for the repository query
+        try {
+            Bus.BusType busType = Bus.BusType.valueOf(type);
+            return busRepository.findByType(busType);
+        } catch (IllegalArgumentException e) {
+            // Handle case where the string doesn't match any enum value
+            return List.of(); // Return empty list if the type is not valid
+        }
     }
 
     @Override
@@ -67,7 +74,12 @@ public class BusServiceImpl implements BusService {
         bus.setRegistrationNumber(busDTO.getRegistrationNumber());
         bus.setModel(busDTO.getModel());
         bus.setCapacity(busDTO.getCapacity());
-        bus.setType(busDTO.getType());
+        // Convert string to enum with error handling
+        try {
+            bus.setType(Bus.BusType.valueOf(busDTO.getType()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid bus type: " + busDTO.getType());
+        }
         bus.setStatus(busDTO.getStatus());
         
         if (!validateBus(bus)) {
@@ -98,7 +110,12 @@ public class BusServiceImpl implements BusService {
         existingBus.setRegistrationNumber(busDTO.getRegistrationNumber());
         existingBus.setModel(busDTO.getModel());
         existingBus.setCapacity(busDTO.getCapacity());
-        existingBus.setType(busDTO.getType());
+        // Convert string to enum with error handling
+        try {
+            existingBus.setType(Bus.BusType.valueOf(busDTO.getType()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid bus type: " + busDTO.getType());
+        }
         existingBus.setStatus(busDTO.getStatus());
         
         if (!validateBus(existingBus)) {
@@ -147,8 +164,8 @@ public class BusServiceImpl implements BusService {
             return false;
         }
         
-        // Check if type is valid
-        if (bus.getType() == null || bus.getType().trim().isEmpty()) {
+        // Check if type is valid - simplified for college project
+        if (bus.getType() == null) {
             return false;
         }
         

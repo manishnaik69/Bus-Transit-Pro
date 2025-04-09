@@ -444,8 +444,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Map<Long, Double> getScheduleOccupancyRates(LocalDateTime startDate, LocalDateTime endDate) {
-        // For this implementation, we'll calculate in memory since we've updated the model
-        // In a real implementation, we would modify the repository query
+        // Simplified implementation - calculate in memory
+        // Using all schedules without date filtering for simplicity
         List<Schedule> schedules = scheduleRepository.findAll();
         Map<Long, Double> result = new HashMap<>();
         

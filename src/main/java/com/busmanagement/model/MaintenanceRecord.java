@@ -30,6 +30,7 @@ public class MaintenanceRecord {
     private User maintenanceStaff;
 
     @NotNull
+    @Column(name = "maintenance_date")
     private LocalDateTime maintenanceDate;
 
     @Enumerated(EnumType.STRING)

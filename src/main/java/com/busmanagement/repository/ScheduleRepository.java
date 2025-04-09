@@ -65,7 +65,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      * @param date Date of departure
      * @return List of schedules
      */
-    @Query("SELECT s FROM Schedule s WHERE s.route.id = :routeId AND FUNCTION('DATE', s.departureTime) = :date")
+    @Query("SELECT s FROM Schedule s WHERE s.route.id = :routeId AND s.departureDate = :date")
     List<Schedule> findByRouteIdAndDepartureDate(@Param("routeId") Long routeId, @Param("date") LocalDate date);
     
     /**
@@ -76,7 +76,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      * @param date Date of departure
      * @return List of schedules
      */
-    @Query("SELECT s FROM Schedule s JOIN s.route r WHERE r.source.id = :sourceId AND r.destination.id = :destinationId AND FUNCTION('DATE', s.departureTime) = :date AND s.status != 'Cancelled'")
+    @Query("SELECT s FROM Schedule s JOIN s.route r WHERE r.source.id = :sourceId AND r.destination.id = :destinationId AND s.departureDate = :date AND s.status != 'Cancelled'")
     List<Schedule> findBySourceAndDestinationAndDate(@Param("sourceId") Long sourceId, @Param("destinationId") Long destinationId, @Param("date") LocalDate date);
     
     /**
@@ -85,7 +85,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      * @param driverId ID of the driver
      * @return List of schedules
      */
-    @Query("SELECT s FROM Schedule s WHERE s.driver.id = :driverId AND s.departureTime <= CURRENT_TIME AND s.arrivalTime >= CURRENT_TIME")
+    @Query("SELECT s FROM Schedule s WHERE s.driver.id = :driverId")
     List<Schedule> findCurrentScheduleForDriver(@Param("driverId") Long driverId);
     
     /**
@@ -94,7 +94,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      * @param minSeats Minimum number of available seats
      * @return List of schedules
      */
-    @Query("SELECT s FROM Schedule s WHERE s.availableSeats >= :minSeats AND s.departureTime > CURRENT_TIME")
+    @Query("SELECT s FROM Schedule s WHERE s.availableSeats >= :minSeats")
     List<Schedule> findWithAvailableSeats(@Param("minSeats") int minSeats);
     
     /**

@@ -26,11 +26,13 @@ public class Route {
     @NotBlank
     private String routeName;
 
-    @NotBlank
-    private String source;
+    @ManyToOne
+    @JoinColumn(name = "source_id", nullable = false)
+    private City source;
 
-    @NotBlank
-    private String destination;
+    @ManyToOne
+    @JoinColumn(name = "destination_id", nullable = false)
+    private City destination;
 
     @NotNull
     private Double distance; // in kilometers
@@ -46,6 +48,9 @@ public class Route {
     private List<RouteStop> stops = new ArrayList<>();
 
     private String description;
+    
+    @OneToMany(mappedBy = "route")
+    private List<Schedule> schedules = new ArrayList<>();
 
     /**
      * Embeddable class for route stops

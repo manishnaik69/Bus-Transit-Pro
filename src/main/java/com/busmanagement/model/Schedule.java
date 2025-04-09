@@ -31,6 +31,10 @@ public class Schedule {
     @NotNull
     @Column(name = "departure_time", nullable = false)
     private LocalTime departureTime;
+    
+    @NotNull
+    @Column(name = "departure_date", nullable = false)
+    private java.time.LocalDate departureDate;
 
     @NotNull
     @Column(name = "arrival_time", nullable = false)
@@ -139,6 +143,14 @@ public class Schedule {
 
     public void setDepartureTime(LocalTime departureTime) {
         this.departureTime = departureTime;
+    }
+    
+    public java.time.LocalDate getDepartureDate() {
+        return departureDate;
+    }
+    
+    public void setDepartureDate(java.time.LocalDate departureDate) {
+        this.departureDate = departureDate;
     }
 
     public LocalTime getArrivalTime() {
