@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>Bus Illustration</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="busGradient">
+            <stop stop-color="#0D6EFD" offset="0%"></stop>
+            <stop stop-color="#0A58CA" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="roadGradient">
+            <stop stop-color="#444444" offset="0%"></stop>
+            <stop stop-color="#222222" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" fill="none">
+        <!-- Sky -->
+        <rect fill="#E9ECEF" x="0" y="0" width="800" height="600"></rect>
+        
+        <!-- Sun -->
+        <circle fill="#FFCC33" cx="650" cy="100" r="50"></circle>
+        
+        <!-- Clouds -->
+        <g fill="#FFFFFF">
+            <ellipse cx="150" cy="120" rx="60" ry="30"></ellipse>
+            <ellipse cx="190" cy="100" rx="50" ry="25"></ellipse>
+            <ellipse cx="230" cy="120" rx="60" ry="30"></ellipse>
+            
+            <ellipse cx="450" cy="80" rx="70" ry="35"></ellipse>
+            <ellipse cx="500" cy="60" rx="55" ry="30"></ellipse>
+            <ellipse cx="550" cy="80" rx="65" ry="35"></ellipse>
+        </g>
+        
+        <!-- Road -->
+        <rect fill="url(#roadGradient)" x="0" y="450" width="800" height="150"></rect>
+        
+        <!-- Road Markings -->
+        <g fill="#FFFFFF">
+            <rect x="50" y="525" width="80" height="10"></rect>
+            <rect x="180" y="525" width="80" height="10"></rect>
+            <rect x="310" y="525" width="80" height="10"></rect>
+            <rect x="440" y="525" width="80" height="10"></rect>
+            <rect x="570" y="525" width="80" height="10"></rect>
+            <rect x="700" y="525" width="80" height="10"></rect>
+        </g>
+        
+        <!-- Bus Body -->
+        <g transform="translate(250, 350)">
+            <!-- Main Bus Body -->
+            <rect fill="url(#busGradient)" x="0" y="0" width="300" height="100" rx="15"></rect>
+            
+            <!-- Bus Roof -->
+            <rect fill="#0A58CA" x="25" y="-20" width="250" height="20" rx="5"></rect>
+            
+            <!-- Bus Front -->
+            <rect fill="#0A58CA" x="-30" y="20" width="30" height="80" rx="5"></rect>
+            
+            <!-- Windows -->
+            <g fill="#E6F2FF">
+                <rect x="20" y="20" width="40" height="30" rx="5"></rect>
+                <rect x="70" y="20" width="40" height="30" rx="5"></rect>
+                <rect x="120" y="20" width="40" height="30" rx="5"></rect>
+                <rect x="170" y="20" width="40" height="30" rx="5"></rect>
+                <rect x="220" y="20" width="40" height="30" rx="5"></rect>
+                
+                <!-- Windshield -->
+                <rect x="-25" y="30" width="25" height="40" rx="5"></rect>
+            </g>
+            
+            <!-- Door -->
+            <rect fill="#0A58CA" x="270" y="55" width="15" height="45" rx="2"></rect>
+            <rect fill="#E6F2FF" x="272" y="57" width="11" height="41" rx="1"></rect>
+            
+            <!-- Wheels -->
+            <circle fill="#333333" cx="50" cy="105" r="25"></circle>
+            <circle fill="#FFFFFF" cx="50" cy="105" r="15"></circle>
+            <circle fill="#333333" cx="50" cy="105" r="5"></circle>
+            
+            <circle fill="#333333" cx="250" cy="105" r="25"></circle>
+            <circle fill="#FFFFFF" cx="250" cy="105" r="15"></circle>
+            <circle fill="#333333" cx="250" cy="105" r="5"></circle>
+            
+            <!-- Headlights -->
+            <circle fill="#FFCC33" cx="-25" cy="40" r="5"></circle>
+            <circle fill="#FFCC33" cx="-25" cy="80" r="5"></circle>
+            
+            <!-- License Plate -->
+            <rect fill="#FFFFFF" x="0" y="80" width="25" height="15" rx="2"></rect>
+            <text font-family="Arial" font-size="8" fill="#000000" x="3" y="91">BUS123</text>
+            
+            <!-- Bus Management System Text -->
+            <text font-family="Arial" font-weight="bold" font-size="14" fill="#FFFFFF" x="75" y="70">BUS MANAGEMENT</text>
+        </g>
+    </g>
+</svg>

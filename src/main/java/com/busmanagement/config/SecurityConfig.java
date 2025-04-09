@@ -1,40 +1,32 @@
 package com.busmanagement.config;
 
+import com.busmanagement.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import com.busmanagement.service.CustomUserDetailsService;
 
 /**
  * Security configuration for the application
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
     /**
-     * Configure authentication
+     * Configure authentication manager
      */
     @Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     /**
@@ -42,48 +34,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
+        http.csrf().disable()
             .authorizeRequests()
-                .antMatchers("/", "/home", "/about", "/register", "/login", "/contact",
-                        "/css/**", "/js/**", "/images/**", "/webjars/**", "/error").permitAll()
-                .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/passenger/**").hasRole("PASSENGER")
-                .antMatchers("/api/driver/**").hasRole("DRIVER")
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/maintenance/**").hasRole("MAINTENANCE")
+                .antMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                .antMatchers("/", "/about", "/contact", "/register", "/login").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/maintenance/**").hasRole("MAINTENANCE")
+                .antMatchers("/driver/**").hasRole("DRIVER")
                 .anyRequest().authenticated()
-                .and()
+            .and()
             .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/dashboard")
                 .permitAll()
-                .and()
+            .and()
             .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/")
                 .permitAll()
-                .and()
+            .and()
             .exceptionHandling()
-                .accessDeniedPage("/403");
+                .accessDeniedPage("/error/403");
     }
 
     /**
      * Password encoder bean
-     * 
-     * @return BCryptPasswordEncoder
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * Authentication manager bean
-     */
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 }

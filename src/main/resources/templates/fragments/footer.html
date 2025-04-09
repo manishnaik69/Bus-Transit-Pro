@@ -3,65 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Footer</title>
+    <title>Footer Fragment</title>
 </head>
 <body>
-    <footer th:fragment="footer" class="bg-dark text-white py-4 mt-5">
+    <!-- Footer Fragment -->
+    <footer th:fragment="footer" class="footer mt-auto py-4 bg-dark text-white">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5>Bus Management System</h5>
-                    <p class="text-muted">
-                        A comprehensive solution for bus operations management, booking, and maintenance tracking.
-                    </p>
+                <!-- Company Info -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-3">Bus Management System</h5>
+                    <p class="mb-3">Providing efficient transportation solutions with advanced technology and reliable service.</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
-                <div class="col-md-2 mb-3">
-                    <h5>Quick Links</h5>
+                
+                <!-- Quick Links -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a class="text-muted" th:href="@{/}">Home</a></li>
-                        <li><a class="text-muted" th:href="@{/about}">About</a></li>
-                        <li><a class="text-muted" th:href="@{/contact}">Contact</a></li>
+                        <li class="mb-2"><a th:href="@{/}" class="text-white text-decoration-none">Home</a></li>
+                        <li class="mb-2"><a th:href="@{/about}" class="text-white text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a th:href="@{/contact}" class="text-white text-decoration-none">Contact Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Terms & Conditions</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <h5>Passenger</h5>
+                
+                <!-- Contact Info -->
+                <div class="col-md-4">
+                    <h5 class="text-uppercase mb-3">Contact Us</h5>
                     <ul class="list-unstyled">
-                        <li><a class="text-muted" th:href="@{/buses}">Browse Buses</a></li>
-                        <li><a class="text-muted" th:href="@{/bookings}">My Bookings</a></li>
-                        <li><a class="text-muted" th:href="@{/profile}">My Profile</a></li>
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Bus Terminal Road, Bangalore, India</li>
+                        <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> +91 9876543210</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@busmanagement.com</li>
+                        <li><i class="fas fa-clock me-2"></i> Mon-Sat: 9:00 AM - 8:00 PM</li>
                     </ul>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <h5>Contact Us</h5>
-                    <address class="text-muted">
-                        <i class="fas fa-map-marker-alt me-2"></i> 123 Bus Station Road<br>
-                        <i class="fas fa-phone me-2"></i> +1 (555) 123-4567<br>
-                        <i class="fas fa-envelope me-2"></i> info@busmanagement.com
-                    </address>
                 </div>
             </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="text-muted mb-0">
-                        &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2023</span> Bus Management System. All rights reserved.
-                    </p>
+            
+            <hr class="my-4 bg-secondary">
+            
+            <!-- Copyright -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2023</span> Bus Management System. All rights reserved.</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <ul class="list-inline mb-0">
-                        <li class="list-inline-item">
-                            <a href="#" class="text-muted"><i class="fab fa-facebook-f"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#" class="text-muted"><i class="fab fa-linkedin-in"></i></a>
-                        </li>
-                    </ul>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <p class="mb-0">Designed & Developed with <i class="fas fa-heart text-danger"></i> for a better transport experience</p>
                 </div>
             </div>
         </div>

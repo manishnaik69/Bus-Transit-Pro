@@ -1,41 +1,40 @@
+/* 
+ * Main CSS file for Bus Management System 
+ */
+
 /* Global Styles */
 :root {
     --primary-color: #0d6efd;
     --secondary-color: #6c757d;
-    --success-color: #28a745;
-    --info-color: #17a2b8;
-    --warning-color: #ffc107;
+    --success-color: #198754;
     --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
     --light-color: #f8f9fa;
-    --dark-color: #343a40;
+    --dark-color: #212529;
+    --primary-hover: #0b5ed7;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
     color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    background-color: #f5f5f5;
 }
 
-main {
-    flex: 1;
+/* Navbar Custom Styling */
+.navbar-brand {
+    font-weight: 600;
 }
 
-a {
-    text-decoration: none;
+/* Main Container */
+.container {
+    max-width: 1280px;
 }
 
-/* Hero Section */
-.hero-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-/* Card Hover Effects */
+/* Card Styles */
 .card {
+    border-radius: 10px;
+    overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -44,41 +43,157 @@ a {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Features Icons */
+.card-title {
+    font-weight: 600;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Feature Icons */
 .feature-icon {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 0.75rem;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
 }
 
-/* Bus Seat Selection */
-.seat-grid {
+/* Social Icons */
+.social-icons a {
+    transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    transform: translateY(-3px);
+}
+
+/* Route Line & Dots */
+.route-line {
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    margin: 0 15px;
+}
+
+.route-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    top: -5px;
+}
+
+.route-dot.start {
+    left: 0;
+}
+
+.route-dot.end {
+    right: 0;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+}
+
+/* OR Divider for Login/Register Forms */
+.divider-text {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    z-index: 1;
+}
+
+.divider-text::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background-color: #e0e0e0;
+    top: 50%;
+    left: 0;
+    z-index: -1;
+}
+
+.divider-text span {
+    padding: 0 15px;
+    background-color: white;
+}
+
+/* Testimonial Styles */
+.testimonial-avatar img {
+    border: 2px solid var(--primary-color);
+}
+
+/* Footer Styles */
+.footer {
+    margin-top: auto;
+}
+
+/* Seat Selection Styles */
+.seat-map {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    max-width: 300px;
+    max-width: 400px;
     margin: 0 auto;
 }
 
 .seat {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border-radius: 5px;
     background-color: #f8f9fa;
-    transition: background-color 0.2s;
+    border: 2px solid #e0e0e0;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-.seat.available {
-    background-color: #f8f9fa;
+.seat:hover {
+    border-color: var(--primary-color);
 }
 
 .seat.selected {
@@ -88,176 +203,125 @@ a {
 }
 
 .seat.booked {
-    background-color: var(--secondary-color);
-    color: white;
+    background-color: #e0e0e0;
     cursor: not-allowed;
-    border-color: var(--secondary-color);
+    color: #999;
 }
 
 .seat.driver {
-    background-color: var(--dark-color);
+    background-color: #212529;
     color: white;
-    cursor: not-allowed;
-    border-color: var(--dark-color);
+    cursor: default;
 }
 
-/* Dashboard Cards */
-.dashboard-card {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    height: 100%;
+/* Bus Details Card */
+.bus-details-card {
+    border-left: 5px solid var(--primary-color);
 }
 
-.dashboard-card .card-header {
-    background-color: #f8f9fa;
-    border-bottom: none;
-    padding: 1.5rem;
+/* Booking Status Badges */
+.status-confirmed {
+    background-color: var(--success-color);
 }
 
-.dashboard-card .card-body {
-    padding: 1.5rem;
+.status-pending {
+    background-color: var(--warning-color);
 }
 
-.dashboard-stat {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: block;
+.status-cancelled {
+    background-color: var(--danger-color);
 }
 
-/* Profile Page */
-.profile-header {
-    background-color: var(--light-color);
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-    border-radius: 0.5rem;
-}
-
-.profile-picture {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Bus Cards */
-.bus-card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.bus-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.bus-card .card-header {
-    background-color: transparent;
-    border-bottom: none;
-    padding: 1.5rem 1.5rem 0;
-}
-
-.bus-card .card-body {
-    padding: 1.5rem;
-}
-
-.bus-card .card-footer {
-    background-color: transparent;
-    border-top: none;
-    padding: 0 1.5rem 1.5rem;
-}
-
-.bus-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-
-.bus-feature {
-    background-color: var(--light-color);
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    display: inline-flex;
-    align-items: center;
-}
-
-.bus-feature i {
-    margin-right: 5px;
-}
-
-.bus-route {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-}
-
-.bus-route-line {
-    flex-grow: 1;
-    height: 2px;
-    background-color: var(--primary-color);
-    margin: 0 10px;
+/* Timeline for Trip Details */
+.timeline {
     position: relative;
+    padding-left: 30px;
 }
 
-.bus-route-line::before,
-.bus-route-line::after {
-    content: '';
+.timeline::before {
+    content: "";
     position: absolute;
-    width: 10px;
-    height: 10px;
+    height: 100%;
+    width: 2px;
+    background-color: #e0e0e0;
+    left: 9px;
+    top: 0;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.timeline-dot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
     background-color: var(--primary-color);
     border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
+    left: -30px;
+    top: 0;
 }
 
-.bus-route-line::before {
-    left: 0;
+.timeline-content {
+    padding-left: 15px;
 }
 
-.bus-route-line::after {
-    right: 0;
+/* Maintenance Status Colors */
+.status-operational {
+    color: var(--success-color);
 }
 
-/* Footer */
-footer {
-    margin-top: auto;
+.status-maintenance {
+    color: var(--warning-color);
+}
+
+.status-out-of-service {
+    color: var(--danger-color);
+}
+
+/* Animation for Real-time Tracking */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+    }
+}
+
+.tracking-pulse {
+    animation: pulse 1.5s infinite;
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
-    .dashboard-stat {
-        font-size: 1.5rem;
+@media (max-width: 767.98px) {
+    .feature-icon {
+        width: 60px;
+        height: 60px;
     }
     
-    .profile-picture {
-        width: 100px;
-        height: 100px;
+    .seat-map {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+/* Print Styles for Tickets */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-only {
+        display: block !important;
+    }
+    
+    .ticket-container {
+        border: 2px solid #000;
+        padding: 20px;
+        margin: 20px 0;
+    }
 }

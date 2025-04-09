@@ -1,61 +1,51 @@
 package com.busmanagement.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.busmanagement.security.UserDetailsImpl;
-
 /**
- * Controller for the home page and other public pages
+ * Controller for index pages
  */
 @Controller
 public class IndexController {
 
     /**
-     * Display the home page
+     * Show home page
+     *
+     * @return the home page view
      */
     @GetMapping("/")
-    public String showHomePage() {
+    public String home() {
         return "index";
     }
 
     /**
-     * Display the about page
+     * Show about page
+     *
+     * @return the about page view
      */
     @GetMapping("/about")
-    public String showAboutPage() {
+    public String about() {
         return "about";
     }
 
     /**
-     * Display the contact page
+     * Show contact page
+     *
+     * @return the contact page view
      */
     @GetMapping("/contact")
-    public String showContactPage() {
+    public String contact() {
         return "contact";
     }
 
     /**
-     * Display the dashboard
+     * Show dashboard page
+     *
+     * @return the dashboard page view
      */
     @GetMapping("/dashboard")
-    public String showDashboard(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        
-        model.addAttribute("user", userDetails);
-        
+    public String dashboard() {
         return "dashboard";
-    }
-
-    /**
-     * Display access denied page
-     */
-    @GetMapping("/403")
-    public String accessDenied() {
-        return "error/403";
     }
 }

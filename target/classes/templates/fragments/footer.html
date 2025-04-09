@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footer</title>
+</head>
+<body>
+    <footer th:fragment="footer" class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>Bus Management System</h5>
+                    <p class="text-muted">
+                        A comprehensive solution for bus operations management, booking, and maintenance tracking.
+                    </p>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="text-muted" th:href="@{/}">Home</a></li>
+                        <li><a class="text-muted" th:href="@{/about}">About</a></li>
+                        <li><a class="text-muted" th:href="@{/contact}">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5>Passenger</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="text-muted" th:href="@{/buses}">Browse Buses</a></li>
+                        <li><a class="text-muted" th:href="@{/bookings}">My Bookings</a></li>
+                        <li><a class="text-muted" th:href="@{/profile}">My Profile</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <h5>Contact Us</h5>
+                    <address class="text-muted">
+                        <i class="fas fa-map-marker-alt me-2"></i> 123 Bus Station Road<br>
+                        <i class="fas fa-phone me-2"></i> +1 (555) 123-4567<br>
+                        <i class="fas fa-envelope me-2"></i> info@busmanagement.com
+                    </address>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">
+                        &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2023</span> Bus Management System. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a href="#" class="text-muted"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-muted"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

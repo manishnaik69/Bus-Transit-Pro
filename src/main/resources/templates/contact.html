@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Bus Management System</title>
+</head>
+<body>
+    <div th:replace="layouts/base :: html(~{::div.content})">
+        <div class="content">
+            <!-- Contact Hero Section -->
+            <section class="bg-primary text-white py-5 mb-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
+                            <p class="lead">We're here to help! Reach out to us with any questions, feedback, or support needs.</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="https://via.placeholder.com/600x400" alt="Contact Us" class="img-fluid rounded shadow">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Information -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="row g-4">
+                        <!-- Contact Form -->
+                        <div class="col-lg-8 mb-4 mb-lg-0">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <h2 class="fw-bold mb-4">Send Us a Message</h2>
+                                    
+                                    <form action="#" method="post" class="row g-3">
+                                        <!-- Name -->
+                                        <div class="col-md-6">
+                                            <label for="name" class="form-label">Full Name</label>
+                                            <input type="text" class="form-control" id="name" placeholder="Your full name" required>
+                                        </div>
+                                        
+                                        <!-- Email -->
+                                        <div class="col-md-6">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" placeholder="Your email address" required>
+                                        </div>
+                                        
+                                        <!-- Phone -->
+                                        <div class="col-md-6">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" id="phone" placeholder="Your phone number">
+                                        </div>
+                                        
+                                        <!-- Subject -->
+                                        <div class="col-md-6">
+                                            <label for="subject" class="form-label">Subject</label>
+                                            <select id="subject" class="form-select" required>
+                                                <option value="" selected disabled>Select a subject</option>
+                                                <option value="general">General Inquiry</option>
+                                                <option value="booking">Booking Issue</option>
+                                                <option value="cancellation">Cancellation & Refund</option>
+                                                <option value="feedback">Feedback</option>
+                                                <option value="partnership">Business Partnership</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Message -->
+                                        <div class="col-12">
+                                            <label for="message" class="form-label">Message</label>
+                                            <textarea class="form-control" id="message" rows="5" placeholder="Your message" required></textarea>
+                                        </div>
+                                        
+                                        <!-- Submit Button -->
+                                        <div class="col-12 mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="col-lg-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <h2 class="fw-bold mb-4">Contact Information</h2>
+                                    
+                                    <div class="d-flex mb-4">
+                                        <div class="contact-icon bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Head Office</h5>
+                                            <p class="mb-0">123 Bus Terminal Road<br>Bangalore 560001<br>Karnataka, India</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex mb-4">
+                                        <div class="contact-icon bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Phone</h5>
+                                            <p class="mb-0">Customer Support: +91 9876543210<br>Booking Helpline: +91 9876543211</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex mb-4">
+                                        <div class="contact-icon bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Email</h5>
+                                            <p class="mb-0">General Inquiries: info@busmanagement.com<br>Support: support@busmanagement.com</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex">
+                                        <div class="contact-icon bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Business Hours</h5>
+                                            <p class="mb-0">Monday to Saturday: 9:00 AM - 8:00 PM<br>Sunday: 10:00 AM - 4:00 PM</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="my-4">
+                                    
+                                    <h5 class="mb-3">Connect With Us</h5>
+                                    <div class="social-icons d-flex gap-3">
+                                        <a href="#" class="text-primary"><i class="fab fa-facebook-f fa-lg"></i></a>
+                                        <a href="#" class="text-primary"><i class="fab fa-twitter fa-lg"></i></a>
+                                        <a href="#" class="text-primary"><i class="fab fa-instagram fa-lg"></i></a>
+                                        <a href="#" class="text-primary"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                                        <a href="#" class="text-primary"><i class="fab fa-youtube fa-lg"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Map Section -->
+            <section class="py-5 bg-light">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Our Locations</h2>
+                        <p class="lead text-muted">Find us across major cities in India</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-0">
+                                    <!-- Placeholder for an actual map integration -->
+                                    <img src="https://via.placeholder.com/1200x400?text=Map+of+Our+Locations" alt="Map of our locations" class="img-fluid w-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4 g-4">
+                        <!-- Location 1 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Bangalore</h5>
+                                    <p class="card-text mb-0">123 Bus Terminal Road</p>
+                                    <p class="card-text mb-0">Bangalore 560001</p>
+                                    <p class="card-text mb-0">Karnataka, India</p>
+                                    <p class="card-text mb-3">+91 9876543210</p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Get Directions</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Location 2 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Mumbai</h5>
+                                    <p class="card-text mb-0">456 Transport Hub</p>
+                                    <p class="card-text mb-0">Mumbai 400001</p>
+                                    <p class="card-text mb-0">Maharashtra, India</p>
+                                    <p class="card-text mb-3">+91 9876543212</p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Get Directions</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Location 3 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Delhi</h5>
+                                    <p class="card-text mb-0">789 Metro Complex</p>
+                                    <p class="card-text mb-0">New Delhi 110001</p>
+                                    <p class="card-text mb-0">Delhi, India</p>
+                                    <p class="card-text mb-3">+91 9876543213</p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Get Directions</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Location 4 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Chennai</h5>
+                                    <p class="card-text mb-0">321 Transit Center</p>
+                                    <p class="card-text mb-0">Chennai 600001</p>
+                                    <p class="card-text mb-0">Tamil Nadu, India</p>
+                                    <p class="card-text mb-3">+91 9876543214</p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Get Directions</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Frequently Asked Questions</h2>
+                        <p class="lead text-muted">Quick answers to common questions</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="accordion" id="faqAccordion">
+                                <!-- FAQ Item 1 -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faqHeading1">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                                            How do I book a bus ticket?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse1" class="accordion-collapse collapse show" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            Booking a bus ticket is easy. Simply visit our website or app, select your origin and destination cities, choose your travel date, and pick a bus that suits your preferences. You can then select your seat, enter passenger details, and complete the payment to receive your e-ticket.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- FAQ Item 2 -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faqHeading2">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                                            How can I cancel my ticket and get a refund?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            To cancel your ticket, log in to your account, go to 'My Bookings', select the booking you wish to cancel, and click on the 'Cancel Ticket' button. Refunds are processed based on our cancellation policy, which varies depending on how close to the departure time you cancel. Refunds typically take 5-7 business days to reflect in your account.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- FAQ Item 3 -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faqHeading3">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                                            How do I track my bus in real-time?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            You can track your bus in real-time by using our mobile app. After booking, go to 'My Bookings', select your active trip, and tap on 'Track Bus'. This will show you the current location of your bus, estimated time of arrival at your boarding point, and any updates regarding your journey.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- FAQ Item 4 -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faqHeading4">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                                            What payment methods do you accept?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            We accept various payment methods including credit/debit cards (Visa, MasterCard, American Express), net banking, UPI, popular wallets like PayTM and PhonePe, and EMI options from select banks. All our payment gateways are secure and comply with the latest security standards.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- FAQ Item 5 -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faqHeading5">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                                            How much luggage am I allowed to carry?
+                                        </button>
+                                    </h2>
+                                    <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            Each passenger is allowed to carry one piece of luggage up to 15 kg and one handbag. Additional luggage may be subject to extra charges and availability of space. Please note that certain items like flammable materials, weapons, and perishable goods are not permitted. For special luggage requirements, please contact our customer support in advance.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="py-5 bg-primary text-white">
+                <div class="container">
+                    <div class="row align-items-center justify-content-center text-center">
+                        <div class="col-lg-8">
+                            <h2 class="fw-bold mb-3">Need More Help?</h2>
+                            <p class="lead mb-4">Our customer support team is available 24/7 to assist you with any questions or concerns.</p>
+                            <div class="d-flex flex-wrap justify-content-center gap-3">
+                                <a href="tel:+919876543210" class="btn btn-light btn-lg">
+                                    <i class="fas fa-phone-alt me-2"></i> Call Us
+                                </a>
+                                <a href="mailto:support@busmanagement.com" class="btn btn-outline-light btn-lg">
+                                    <i class="fas fa-envelope me-2"></i> Email Support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

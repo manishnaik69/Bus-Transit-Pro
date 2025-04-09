@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="layouts/base :: html(~{::title}, ~{::section}, ~{}, ~{::script})">
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <section th:fragment="content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-body p-5">
+                            <h2 class="text-center mb-4">Create an Account</h2>
+                            
+                            <form th:action="@{/register}" method="post" th:object="${user}">
+                                <!-- Personal Information -->
+                                <h5 class="mb-3">Personal Information</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="gender" th:field="*{gender}">
+                                            <option value="">Select gender</option>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                            <option value="OTHER">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="age" class="form-label">Age</label>
+                                        <input type="number" class="form-control" id="age" th:field="*{age}" min="1" max="120">
+                                    </div>
+                                </div>
+                                
+                                <!-- Address Information -->
+                                <h5 class="mb-3 mt-4">Address Information</h5>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="address" th:field="*{address}" required>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" class="form-control" id="city" th:field="*{city}" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3 mb-md-0">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" class="form-control" id="state" th:field="*{state}" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="pinCode" class="form-label">Pin Code</label>
+                                        <input type="text" class="form-control" id="pinCode" th:field="*{pinCode}" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Account Information -->
+                                <h5 class="mb-3 mt-4">Account Information</h5>
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" th:field="*{username}" required>
+                                    <div class="form-text">Your username must be unique. This will be used to login to your account.</div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label for="password" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="password" name="password" required>
+                                            <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('password', 'passwordToggleIcon')">
+                                                <i id="passwordToggleIcon" class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text">Password must be at least 8 characters long and include a mix of letters, numbers, and symbols.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                            <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('confirmPassword', 'confirmPasswordToggleIcon')">
+                                                <i id="confirmPasswordToggleIcon" class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="termsAgreement" required>
+                                    <label class="form-check-label" for="termsAgreement">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-user-plus me-2"></i> Register
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <hr class="my-4">
+                            
+                            <div class="text-center">
+                                <p>Already have an account? <a th:href="@{/login}" class="fw-bold">Login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script th:fragment="customJS">
+        // Password validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            
+            form.addEventListener('submit', function(event) {
+                if (password.value !== confirmPassword.value) {
+                    event.preventDefault();
+                    alert('Passwords do not match!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

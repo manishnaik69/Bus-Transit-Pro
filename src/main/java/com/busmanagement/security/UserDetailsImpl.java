@@ -2,6 +2,8 @@ package com.busmanagement.security;
 
 import com.busmanagement.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,38 +16,26 @@ import java.util.stream.Collectors;
 /**
  * UserDetails implementation for Spring Security
  */
+@Data
+@AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    private String firstName;
-    private String lastName;
     private String username;
     private String email;
-    private String phoneNumber;
-
+    private String fullName;
+    
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
     /**
-     * Constructor
-     */
-    public UserDetailsImpl(Long id, String firstName, String lastName, String username, String email, 
-                          String phoneNumber, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.authorities = authorities;
-    }
-
-    /**
      * Build UserDetailsImpl from User entity
+     *
+     * @param user the user entity
+     * @return the UserDetailsImpl
      */
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
@@ -54,11 +44,9 @@ public class UserDetailsImpl implements UserDetails {
 
         return new UserDetailsImpl(
                 user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getPhoneNumber(),
+                user.getFullName(),
                 user.getPassword(),
                 authorities);
     }
@@ -66,26 +54,6 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
     @Override

@@ -1,12 +1,19 @@
 package com.busmanagement.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 /**
- * Entity representing a user role in the system
+ * Entity representing a role in the system
  */
 @Entity
 @Table(name = "roles")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,34 +24,9 @@ public class Role {
     private ERole name;
 
     /**
-     * Default constructor
+     * Role types in the system
      */
-    public Role() {
-    }
-
-    /**
-     * Constructor with role name
-     * 
-     * @param name Role name
-     */
-    public Role(ERole name) {
-        this.name = name;
-    }
-
-    // Getters and setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ERole getName() {
-        return name;
-    }
-
-    public void setName(ERole name) {
-        this.name = name;
+    public enum ERole {
+        ROLE_USER, ROLE_DRIVER, ROLE_ADMIN, ROLE_MAINTENANCE
     }
 }

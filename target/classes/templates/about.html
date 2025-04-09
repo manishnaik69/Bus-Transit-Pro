@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="layouts/base :: html(~{::title}, ~{::section}, ~{}, ~{})">
+<head>
+    <title>About Us</title>
+</head>
+<body>
+    <section th:fragment="content">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">About Us</h1>
+                <p class="lead">Learn more about our bus management system</p>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <h2 class="mb-3">Our Mission</h2>
+                    <p>Our mission is to revolutionize the bus transportation industry through innovative technology solutions that enhance operational efficiency, improve passenger experience, and promote sustainable transportation practices.</p>
+                    <p>We aim to connect communities, reduce environmental impact, and make bus travel a preferred mode of transportation through reliable, efficient, and modern services.</p>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="mb-3">Our Vision</h2>
+                    <p>We envision a future where bus transportation is seamlessly integrated with smart city infrastructure, providing reliable, sustainable, and accessible mobility solutions for everyone.</p>
+                    <p>Our goal is to be at the forefront of this transformation, driving innovation in the bus transportation sector through cutting-edge technology and customer-centered service design.</p>
+                </div>
+            </div>
+            
+            <div class="bg-light p-4 rounded-3 mb-5">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <div class="display-4 text-primary mb-2">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <h3>Modern Fleet</h3>
+                        <p>Our extensive fleet of modern buses ensures comfortable and safe journeys for all passengers.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <div class="display-4 text-primary mb-2">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3>Extensive Routes</h3>
+                        <p>We connect major cities and towns with frequent and reliable bus services.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="display-4 text-primary mb-2">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Customer Support</h3>
+                        <p>Our dedicated support team is available 24/7 to assist you with any queries or concerns.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="mb-4">Our History</h2>
+                    <div class="position-relative">
+                        <div class="timeline-line"></div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">2010 - Foundation</h5>
+                                        <p class="card-text">Bus Management System was founded with a vision to modernize bus transportation services through technology.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6 offset-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">2015 - Expansion</h5>
+                                        <p class="card-text">Expanded operations to cover major cities across the country, serving thousands of passengers daily.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">2018 - Digital Transformation</h5>
+                                        <p class="card-text">Launched our online booking platform and mobile app, revolutionizing how customers book and manage their journeys.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 offset-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title">2023 - Innovation</h5>
+                                        <p class="card-text">Introduced real-time tracking, advanced maintenance management, and sustainable fleet management practices.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">Our Team</h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title">John Doe</h5>
+                                    <p class="card-subtitle mb-2 text-muted">Chief Executive Officer</p>
+                                    <p class="card-text">With over 20 years of experience in the transportation industry, John leads our company with vision and expertise.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title">Jane Smith</h5>
+                                    <p class="card-subtitle mb-2 text-muted">Chief Technology Officer</p>
+                                    <p class="card-text">Jane is the driving force behind our technological innovations, ensuring we stay at the cutting edge of the industry.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title">Michael Johnson</h5>
+                                    <p class="card-subtitle mb-2 text-muted">Operations Director</p>
+                                    <p class="card-text">Michael ensures that our day-to-day operations run smoothly, maintaining our high standards of service.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

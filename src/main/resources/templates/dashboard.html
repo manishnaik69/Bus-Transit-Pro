@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="layouts/base :: html(~{::title}, ~{::section}, ~{}, ~{})">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <section th:fragment="content">
+        <div class="container py-5">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1 class="fw-bold" th:text="'Welcome, ' + ${user.firstName}">Welcome, User</h1>
+                    <p class="lead">This is your personal dashboard. Here you can manage all your bus travel needs.</p>
+                </div>
+                <div class="col-md-4 text-md-end" sec:authorize="hasRole('PASSENGER')">
+                    <a th:href="@{/buses}" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i> Find Buses
+                    </a>
+                </div>
+            </div>
+            
+            <div class="row g-4" sec:authorize="hasRole('PASSENGER')">
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-ticket-alt me-2 text-primary"></i> My Bookings
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-primary">0</span>
+                            <span class="text-muted">Active Bookings</span>
+                            <div class="mt-3">
+                                <a th:href="@{/bookings}" class="btn btn-sm btn-outline-primary">View All Bookings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-history me-2 text-success"></i> Recent Trips
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-success">0</span>
+                            <span class="text-muted">Completed Trips</span>
+                            <div class="mt-3">
+                                <a th:href="@{/trips/history}" class="btn btn-sm btn-outline-success">View Trip History</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-star me-2 text-warning"></i> Frequent Routes
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-warning">0</span>
+                            <span class="text-muted">Saved Routes</span>
+                            <div class="mt-3">
+                                <a href="#" class="btn btn-sm btn-outline-warning">Manage Favorites</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mt-2" sec:authorize="hasRole('DRIVER')">
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-route me-2 text-primary"></i> My Upcoming Trips
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-primary">0</span>
+                            <span class="text-muted">Scheduled Trips</span>
+                            <div class="mt-3">
+                                <a th:href="@{/driver/trips}" class="btn btn-sm btn-outline-primary">View All Trips</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-bus me-2 text-success"></i> Assigned Bus
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1">No bus assigned</p>
+                            <small class="text-muted">Contact admin for bus assignment</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mt-2" sec:authorize="hasRole('ADMIN')">
+                <div class="col-md-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-users me-2 text-primary"></i> Users
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-primary">0</span>
+                            <span class="text-muted">Registered Users</span>
+                            <div class="mt-3">
+                                <a th:href="@{/admin/users}" class="btn btn-sm btn-outline-primary">Manage Users</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-bus me-2 text-success"></i> Buses
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-success">0</span>
+                            <span class="text-muted">Active Buses</span>
+                            <div class="mt-3">
+                                <a th:href="@{/admin/buses}" class="btn btn-sm btn-outline-success">Manage Buses</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-route me-2 text-info"></i> Routes
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-info">0</span>
+                            <span class="text-muted">Active Routes</span>
+                            <div class="mt-3">
+                                <a th:href="@{/admin/routes}" class="btn btn-sm btn-outline-info">Manage Routes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-money-bill-wave me-2 text-warning"></i> Revenue
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-warning">₹0</span>
+                            <span class="text-muted">Total Revenue</span>
+                            <div class="mt-3">
+                                <a th:href="@{/admin/reports}" class="btn btn-sm btn-outline-warning">View Reports</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mt-2" sec:authorize="hasRole('MAINTENANCE')">
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-tasks me-2 text-primary"></i> Pending Tasks
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-primary">0</span>
+                            <span class="text-muted">Maintenance Tasks</span>
+                            <div class="mt-3">
+                                <a th:href="@{/maintenance/tasks}" class="btn btn-sm btn-outline-primary">View Tasks</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-check-circle me-2 text-success"></i> Completed Tasks
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <span class="dashboard-stat text-success">0</span>
+                            <span class="text-muted">Maintenance Records</span>
+                            <div class="mt-3">
+                                <a th:href="@{/maintenance/records}" class="btn btn-sm btn-outline-success">View Records</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-tools me-2 text-warning"></i> My Tools
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1">Maintenance Schedule</p>
+                            <small class="text-muted">View and manage maintenance schedules</small>
+                            <div class="mt-3">
+                                <a th:href="@{/maintenance/schedule}" class="btn btn-sm btn-outline-warning">View Schedule</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-user-circle me-2"></i> Profile Information
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Name:</strong> <span th:text="${user.firstName + ' ' + user.lastName}">John Doe</span></p>
+                                    <p><strong>Username:</strong> <span th:text="${user.username}">johndoe</span></p>
+                                    <p><strong>Email:</strong> <span th:text="${user.email}">john@example.com</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Phone Number:</strong> <span th:text="${user.phoneNumber ?: 'Not provided'}">+1234567890</span></p>
+                                    <p><strong>Role:</strong> 
+                                        <span sec:authorize="hasRole('ADMIN')">Administrator</span>
+                                        <span sec:authorize="hasRole('PASSENGER')">Passenger</span>
+                                        <span sec:authorize="hasRole('DRIVER')">Driver</span>
+                                        <span sec:authorize="hasRole('MAINTENANCE')">Maintenance Staff</span>
+                                    </p>
+                                    <p><strong>Account Created:</strong> <span>N/A</span></p>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a th:href="@{/profile}" class="btn btn-outline-primary">
+                                    <i class="fas fa-user-edit me-2"></i> Edit Profile
+                                </a>
+                                <a th:href="@{/profile/change-password}" class="btn btn-outline-secondary ms-2">
+                                    <i class="fas fa-key me-2"></i> Change Password
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
