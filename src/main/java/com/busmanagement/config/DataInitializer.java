@@ -1,7 +1,7 @@
 package com.busmanagement.config;
 
-import com.busmanagement.model.ERole;
 import com.busmanagement.model.Role;
+import com.busmanagement.model.Role.ERole;
 import com.busmanagement.model.User;
 import com.busmanagement.repository.RoleRepository;
 import com.busmanagement.repository.UserRepository;

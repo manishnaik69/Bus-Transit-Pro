@@ -51,12 +51,12 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByStatus(String status);
     
     /**
-     * Finds all schedules with departure time after a specific date/time.
+     * Finds all schedules with departure time after a specific time.
      * 
      * @param departureTime Minimum departure time
      * @return List of schedules
      */
-    List<Schedule> findByDepartureTimeAfter(LocalDateTime departureTime);
+    List<Schedule> findByDepartureTimeAfter(LocalTime departureTime);
     
     /**
      * Finds all schedules for a specific route and date.
@@ -85,7 +85,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      * @param driverId ID of the driver
      * @return List of schedules
      */
-    @Query("SELECT s FROM Schedule s WHERE s.driver.id = :driverId AND s.departureTime <= CURRENT_TIMESTAMP AND s.arrivalTime >= CURRENT_TIMESTAMP")
+    @Query("SELECT s FROM Schedule s WHERE s.driver.id = :driverId AND s.departureTime <= CURRENT_TIME AND s.arrivalTime >= CURRENT_TIME")
     List<Schedule> findCurrentScheduleForDriver(@Param("driverId") Long driverId);
     
     /**
@@ -94,16 +94,16 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      * @param minSeats Minimum number of available seats
      * @return List of schedules
      */
-    @Query("SELECT s FROM Schedule s WHERE s.availableSeats >= :minSeats AND s.departureTime > CURRENT_TIMESTAMP")
+    @Query("SELECT s FROM Schedule s WHERE s.availableSeats >= :minSeats AND s.departureTime > CURRENT_TIME")
     List<Schedule> findWithAvailableSeats(@Param("minSeats") int minSeats);
     
     /**
-     * Calculates the occupancy rate for each schedule within a specific date range.
+     * Calculates the occupancy rate for each schedule within a specific time range.
      * 
-     * @param startDate Start of the date range
-     * @param endDate End of the date range
+     * @param startTime Start of the time range
+     * @param endTime End of the time range
      * @return List of schedules with occupancy rates
      */
-    @Query("SELECT s, (1 - (s.availableSeats * 1.0 / s.bus.capacity)) as occupancyRate FROM Schedule s WHERE s.departureTime BETWEEN :startDate AND :endDate ORDER BY occupancyRate DESC")
-    List<Object[]> getScheduleOccupancyRates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT s, (1 - (s.availableSeats * 1.0 / s.bus.capacity)) as occupancyRate FROM Schedule s WHERE s.departureTime BETWEEN :startTime AND :endTime ORDER BY occupancyRate DESC")
+    List<Object[]> getScheduleOccupancyRates(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
 }

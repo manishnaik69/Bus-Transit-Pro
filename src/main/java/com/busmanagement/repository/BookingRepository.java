@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,4 +59,30 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @return List of bookings
      */
     List<Booking> findByUserIdAndStatus(Long userId, BookingStatus status);
+    
+    /**
+     * Count bookings between specific dates
+     * @param startDate Start date for the range
+     * @param endDate End date for the range
+     * @return Number of bookings in the date range
+     */
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingTime BETWEEN :startDate AND :endDate")
+    long countBookingsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    
+    /**
+     * Calculate total revenue from bookings between specific dates
+     * @param startDate Start date for the range
+     * @param endDate End date for the range
+     * @return Total revenue amount
+     */
+    @Query("SELECT SUM(b.totalAmount) FROM Booking b WHERE b.bookingTime BETWEEN :startDate AND :endDate AND b.status != 'CANCELLED'")
+    Double getTotalRevenueBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    
+    /**
+     * Find most recent bookings limited by count
+     * @param limit Number of bookings to return
+     * @return List of recent bookings
+     */
+    @Query("SELECT b FROM Booking b ORDER BY b.bookingTime DESC")
+    List<Booking> findRecentBookings(@Param("limit") int limit);
 }

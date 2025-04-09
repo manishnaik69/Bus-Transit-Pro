@@ -1,5 +1,6 @@
 package com.busmanagement.controller;
 
+import com.busmanagement.dto.RegistrationDTO;
 import com.busmanagement.model.User;
 import com.busmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,20 +44,20 @@ public class AuthController {
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("title", "Register");
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new RegistrationDTO());
         return "auth/register";
     }
     
     /**
      * Process registration form
      *
-     * @param user the user to register
+     * @param registrationDTO the registration data to process
      * @param result the binding result
      * @param redirectAttributes redirect attributes
      * @return redirect to login page on success, register page on error
      */
     @PostMapping("/register")
-    public String processRegistration(@Valid @ModelAttribute("user") User user, 
+    public String processRegistration(@Valid @ModelAttribute("user") RegistrationDTO registrationDTO, 
                                       BindingResult result, 
                                       RedirectAttributes redirectAttributes,
                                       Model model) {
@@ -66,7 +67,7 @@ public class AuthController {
         }
         
         try {
-            userService.registerNewUser(user);
+            userService.registerNewUser(registrationDTO);
             redirectAttributes.addFlashAttribute("successMessage", "Registration successful! Please login.");
             return "redirect:/login?registered";
         } catch (Exception e) {

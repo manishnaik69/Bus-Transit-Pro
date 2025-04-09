@@ -77,10 +77,17 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public Booking updateBookingStatus(Long bookingId, String status) {
+    public Booking updateBookingStatus(Long bookingId, String statusStr) {
         Booking booking = findBookingById(bookingId);
         if (booking == null) {
             throw new IllegalArgumentException("Booking not found with id: " + bookingId);
+        }
+        
+        Booking.BookingStatus status;
+        try {
+            status = Booking.BookingStatus.valueOf(statusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid booking status: " + statusStr);
         }
         
         booking.setStatus(status);

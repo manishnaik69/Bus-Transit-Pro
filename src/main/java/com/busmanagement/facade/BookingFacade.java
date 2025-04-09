@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 /**
  * Facade Pattern implementation to simplify the booking process.
@@ -68,12 +70,15 @@ public class BookingFacade {
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setSchedule(schedule);
-        booking.setBookingDate(bookingDTO.getBookingDate());
-        booking.setSeatNumbers(String.join(",", bookingDTO.getSeatNumbers().stream()
-                              .map(String::valueOf)
-                              .toArray(String[]::new)));
+        booking.setBookingTime(LocalDateTime.now());
+        // Convert Integer to String for seat numbers
+        List<String> stringSeatNumbers = bookingDTO.getSeatNumbers().stream()
+                                        .map(String::valueOf)
+                                        .toList();
+        booking.setSeatNumbers(stringSeatNumbers);
+        booking.setNumberOfSeats(bookingDTO.getSeatNumbers().size());
         booking.setTotalAmount(totalAmount);
-        booking.setStatus("PENDING_PAYMENT");
+        booking.setStatus(Booking.BookingStatus.PENDING_PAYMENT);
         
         Booking savedBooking = bookingService.saveBooking(booking);
         
@@ -106,19 +111,20 @@ public class BookingFacade {
         Booking booking = bookingService.findBookingById(bookingId);
         
         // Update booking status
-        booking.setStatus("CANCELLED");
+        booking.setStatus(Booking.BookingStatus.CANCELLED);
+        booking.setCancellationTime(LocalDateTime.now());
         Booking updatedBooking = bookingService.updateBooking(booking);
         
         // Release the seats
         Schedule schedule = booking.getSchedule();
-        String[] seatNumbers = booking.getSeatNumbers().split(",");
+        List<String> seatNumbersList = booking.getSeatNumbers();
         
-        for (String seatNumber : seatNumbers) {
+        for (String seatNumber : seatNumbersList) {
             scheduleService.updateSeatStatus(schedule.getId(), Integer.parseInt(seatNumber), "AVAILABLE");
         }
         
         // Process refund if applicable
-        if ("PAID".equals(booking.getStatus())) {
+        if (Booking.BookingStatus.CONFIRMED.equals(booking.getStatus())) {
             // Calculate refund amount based on cancellation policy
             double refundAmount = calculateRefundAmount(booking);
             
@@ -153,9 +159,10 @@ public class BookingFacade {
         // - 12-24 hours before departure: 50% refund
         // - Less than 12 hours before departure: 0% refund
         
-        LocalDateTime departureTime = booking.getSchedule().getDepartureTime();
-        LocalDateTime now = LocalDateTime.now();
+        LocalTime departureTime = booking.getSchedule().getDepartureTime();
+        LocalTime now = LocalTime.now();
         
+        // Assuming same day - could be enhanced to use actual date differences
         long hoursUntilDeparture = java.time.Duration.between(now, departureTime).toHours();
         
         if (hoursUntilDeparture > 24) {

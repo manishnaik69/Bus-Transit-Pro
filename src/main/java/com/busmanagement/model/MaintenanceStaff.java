@@ -34,15 +34,14 @@ public class MaintenanceStaff extends User {
     /**
      * Constructor with basic fields
      * 
-     * @param firstName First name
-     * @param lastName Last name
      * @param username Username
      * @param email Email
      * @param password Password
+     * @param fullName Full name
      * @param specialization Specialization
      */
-    public MaintenanceStaff(String firstName, String lastName, String username, String email, String password, String specialization) {
-        super(firstName, lastName, username, email, password);
+    public MaintenanceStaff(String username, String email, String password, String fullName, String specialization) {
+        super(username, email, password, fullName);
         this.specialization = specialization;
     }
 

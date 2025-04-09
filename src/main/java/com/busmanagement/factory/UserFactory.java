@@ -1,9 +1,13 @@
 package com.busmanagement.factory;
 
 import com.busmanagement.model.Role;
+import com.busmanagement.model.Role.ERole;
 import com.busmanagement.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Factory Pattern implementation for creating different types of User objects.
@@ -40,30 +44,35 @@ public class UserFactory {
         user.setFullName(fullName);
         user.setPhoneNumber(phoneNumber);
         user.setAddress(address);
-        user.setRole(role);
-        user.setActive(true);
         
-        // Additional initialization based on user role
+        // Set roles collection
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
+        
+        // Set user role enum based on role
         switch (role.getName()) {
-            case "ROLE_PASSENGER":
-                // Initialize passenger-specific properties
+            case ROLE_USER:
+                user.setRole(User.UserRole.PASSENGER);
                 break;
                 
-            case "ROLE_DRIVER":
-                // Initialize driver-specific properties
+            case ROLE_DRIVER:
+                user.setRole(User.UserRole.DRIVER);
                 break;
                 
-            case "ROLE_ADMIN":
-                // Initialize admin-specific properties
+            case ROLE_ADMIN:
+                user.setRole(User.UserRole.ADMIN);
                 break;
                 
-            case "ROLE_MAINTENANCE":
-                // Initialize maintenance-specific properties
+            case ROLE_MAINTENANCE:
+                user.setRole(User.UserRole.MAINTENANCE_STAFF);
                 break;
                 
             default:
                 throw new IllegalArgumentException("Invalid role: " + role.getName());
         }
+        
+        user.setIsActive(true);
         
         return user;
     }

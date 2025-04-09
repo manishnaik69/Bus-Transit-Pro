@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class Passenger extends User {
     
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private Gender genderEnum;
     
     private Integer age;
     
@@ -33,8 +33,8 @@ public class Passenger extends User {
     /**
      * Constructor with basic fields
      */
-    public Passenger(String firstName, String lastName, String username, String email, String password) {
-        super(firstName, lastName, username, email, password);
+    public Passenger(String username, String email, String password, String fullName) {
+        super(username, email, password, fullName);
     }
     
     /**

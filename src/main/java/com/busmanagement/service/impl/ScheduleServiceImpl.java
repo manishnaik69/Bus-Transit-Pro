@@ -93,11 +93,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> findSchedulesAfterDateTime(LocalDateTime dateTime) {
         // Convert LocalDateTime to LocalTime for querying
         LocalTime time = dateTime.toLocalTime();
-        // For implementation purposes, we'll get all schedules and filter by time
-        List<Schedule> allSchedules = scheduleRepository.findAll();
-        return allSchedules.stream()
-                .filter(s -> s.getDepartureTime().isAfter(time))
-                .collect(Collectors.toList());
+        // Query directly with the derived method
+        return scheduleRepository.findByDepartureTimeAfter(time);
     }
 
     @Override
@@ -403,10 +400,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         // Create a maintenance record for the issue
         MaintenanceRecord maintenanceRecord = new MaintenanceRecord();
         maintenanceRecord.setBus(schedule.getBus());
-        maintenanceRecord.setMaintenanceType(issueType);
+        maintenanceRecord.setMaintenanceType(MaintenanceRecord.MaintenanceType.valueOf(issueType));
         maintenanceRecord.setDescription(description);
-        maintenanceRecord.setMaintenanceDate(LocalDate.now());
-        maintenanceRecord.setStatus("Scheduled");
+        maintenanceRecord.setMaintenanceDate(LocalDateTime.now());
+        maintenanceRecord.setStatus(MaintenanceRecord.MaintenanceStatus.SCHEDULED);
         
         maintenanceService.saveMaintenanceRecord(maintenanceRecord);
         

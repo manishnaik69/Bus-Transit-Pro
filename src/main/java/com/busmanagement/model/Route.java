@@ -37,6 +37,9 @@ public class Route {
 
     @NotNull
     private Integer estimatedDuration; // in minutes
+    
+    @NotNull
+    private Double fareAmount; // in currency units
 
     @ElementCollection
     @CollectionTable(name = "route_stops", joinColumns = @JoinColumn(name = "route_id"))

@@ -28,7 +28,7 @@ public class Booking {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "trip_id", nullable = false)
+    @JoinColumn(name = "trip_id")
     private Trip trip;
     
     @ManyToOne
@@ -64,6 +64,6 @@ public class Booking {
      * Booking status enum
      */
     public enum BookingStatus {
-        PENDING, CONFIRMED, CANCELLED, COMPLETED
+        PENDING, CONFIRMED, CANCELLED, COMPLETED, PENDING_PAYMENT
     }
 }

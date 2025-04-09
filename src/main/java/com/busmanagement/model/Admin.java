@@ -25,14 +25,13 @@ public class Admin extends User {
     /**
      * Constructor with basic fields
      * 
-     * @param firstName First name
-     * @param lastName Last name
      * @param username Username
      * @param email Email
      * @param password Password
+     * @param fullName Full name
      */
-    public Admin(String firstName, String lastName, String username, String email, String password) {
-        super(firstName, lastName, username, email, password);
+    public Admin(String username, String email, String password, String fullName) {
+        super(username, email, password, fullName);
     }
 
     // Getters and Setters

@@ -48,7 +48,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     }
 
     @Override
-    public List<MaintenanceRecord> findMaintenanceRecordsByStatus(String status) {
+    public List<MaintenanceRecord> findMaintenanceRecordsByStatus(String statusStr) {
+        MaintenanceRecord.MaintenanceStatus status = MaintenanceRecord.MaintenanceStatus.valueOf(statusStr);
         return maintenanceRepository.findByStatus(status);
     }
 

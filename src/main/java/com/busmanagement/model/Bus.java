@@ -54,8 +54,14 @@ public class Bus {
     private String features;
 
     private String currentLocation;
-
+    
     private String status;
+    
+    private Double mileage;
+    
+    private Double maintenanceThreshold;
+    
+    private LocalDate lastMaintenanceDate;
 
     /**
      * Bus type enum

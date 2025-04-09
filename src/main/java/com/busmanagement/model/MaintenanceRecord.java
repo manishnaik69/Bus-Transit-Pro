@@ -46,6 +46,9 @@ public class MaintenanceRecord {
     private LocalDateTime nextMaintenanceDate;
 
     private String remarks;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     /**
      * Maintenance type enum
