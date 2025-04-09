@@ -1,99 +1,95 @@
 package com.busmanagement.repository;
 
 import com.busmanagement.model.Booking;
+import com.busmanagement.model.BookingStatus;
+import com.busmanagement.model.Passenger;
+import com.busmanagement.model.Trip;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Repository interface for Booking entities.
- * Provides methods to interact with the bookings table in the database.
+ * Repository for Booking entity
  */
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     
     /**
-     * Finds all bookings for a specific user.
+     * Find a booking by booking number
      * 
-     * @param userId ID of the user
-     * @return List of bookings
+     * @param bookingNumber Booking number to search for
+     * @return Optional containing the booking if found
      */
-    List<Booking> findByUserId(Long userId);
+    Optional<Booking> findByBookingNumber(String bookingNumber);
     
     /**
-     * Finds all active (non-cancelled) bookings for a specific user.
+     * Find bookings by passenger
      * 
-     * @param userId ID of the user
-     * @return List of active bookings
+     * @param passenger Passenger to search for
+     * @return List of bookings for the specified passenger
      */
-    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.status != 'CANCELLED'")
-    List<Booking> findActiveBookingsByUserId(@Param("userId") Long userId);
+    List<Booking> findByPassenger(Passenger passenger);
     
     /**
-     * Finds all upcoming bookings for a specific user.
+     * Find bookings by trip
      * 
-     * @param userId ID of the user
-     * @param currentDate Current date
-     * @return List of upcoming bookings
+     * @param trip Trip to search for
+     * @return List of bookings for the specified trip
      */
-    @Query("SELECT b FROM Booking b JOIN b.schedule s WHERE b.user.id = :userId AND s.departureTime >= CURRENT_TIMESTAMP AND b.status != 'CANCELLED' ORDER BY s.departureTime ASC")
-    List<Booking> findUpcomingBookingsByUserId(@Param("userId") Long userId);
+    List<Booking> findByTrip(Trip trip);
     
     /**
-     * Finds all bookings for a specific schedule.
+     * Find bookings by status
      * 
-     * @param scheduleId ID of the schedule
-     * @return List of bookings
+     * @param status Booking status to search for
+     * @return List of bookings with the specified status
      */
-    List<Booking> findByScheduleId(Long scheduleId);
+    List<Booking> findByStatus(BookingStatus status);
     
     /**
-     * Finds all bookings with a specific status.
+     * Find bookings by booking date
      * 
-     * @param status Status of the bookings
-     * @return List of bookings
+     * @param startDate Start of booking date range
+     * @param endDate End of booking date range
+     * @return List of bookings with booking date within the specified range
      */
-    List<Booking> findByStatus(String status);
+    List<Booking> findByBookingTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
     
     /**
-     * Counts the number of bookings for a specific schedule.
+     * Find bookings for passenger with status
      * 
-     * @param scheduleId ID of the schedule
-     * @return Number of bookings
+     * @param passenger Passenger to search for
+     * @param status Booking status to search for
+     * @return List of bookings for the specified passenger with the specified status
      */
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.schedule.id = :scheduleId AND b.status != 'CANCELLED'")
-    Long countActiveBookingsByScheduleId(@Param("scheduleId") Long scheduleId);
+    List<Booking> findByPassengerAndStatus(Passenger passenger, BookingStatus status);
     
     /**
-     * Counts the number of bookings created within a specific date range.
+     * Find active bookings for passenger (upcoming trips)
      * 
-     * @param startDate Start of the date range
-     * @param endDate End of the date range
-     * @return Number of bookings
+     * @param passenger Passenger to search for
+     * @param currentTime Current time
+     * @return List of active bookings for the specified passenger
      */
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingDate BETWEEN :startDate AND :endDate")
-    Long countBookingsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT b FROM Booking b JOIN b.trip t WHERE b.passenger = :passenger AND " +
+           "b.status IN ('CONFIRMED', 'CHECKED_IN') AND t.scheduledDepartureTime > :currentTime")
+    List<Booking> findActiveBookingsForPassenger(@Param("passenger") Passenger passenger, 
+                                                @Param("currentTime") LocalDateTime currentTime);
     
     /**
-     * Gets the total revenue from bookings within a specific date range.
+     * Find past bookings for passenger (completed trips)
      * 
-     * @param startDate Start of the date range
-     * @param endDate End of the date range
-     * @return Total revenue
+     * @param passenger Passenger to search for
+     * @param currentTime Current time
+     * @return List of past bookings for the specified passenger
      */
-    @Query("SELECT SUM(b.totalAmount) FROM Booking b WHERE b.status = 'PAID' AND b.bookingDate BETWEEN :startDate AND :endDate")
-    Double getTotalRevenueBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-    
-    /**
-     * Finds the most recent bookings.
-     * 
-     * @param limit Maximum number of bookings to return
-     * @return List of recent bookings
-     */
-    @Query("SELECT b FROM Booking b ORDER BY b.createdAt DESC")
-    List<Booking> findRecentBookings(int limit);
+    @Query("SELECT b FROM Booking b JOIN b.trip t WHERE b.passenger = :passenger AND " +
+           "(t.scheduledArrivalTime < :currentTime OR b.status = 'COMPLETED')")
+    List<Booking> findPastBookingsForPassenger(@Param("passenger") Passenger passenger, 
+                                              @Param("currentTime") LocalDateTime currentTime);
 }

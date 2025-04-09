@@ -1,66 +1,66 @@
 package com.busmanagement.repository;
 
 import com.busmanagement.model.Bus;
+import com.busmanagement.model.BusType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository interface for Bus entities.
- * Provides methods to interact with the buses table in the database.
+ * Repository for Bus entity
  */
 @Repository
 public interface BusRepository extends JpaRepository<Bus, Long> {
     
     /**
-     * Finds a bus by its registration number.
+     * Find a bus by registration number
      * 
-     * @param registrationNumber Registration number of the bus
-     * @return Optional containing the bus, if found
+     * @param registrationNumber Registration number to search for
+     * @return Optional containing the bus if found
      */
     Optional<Bus> findByRegistrationNumber(String registrationNumber);
     
     /**
-     * Finds all buses with a specific status.
+     * Find buses by type
      * 
-     * @param status Status of the buses
-     * @return List of buses
+     * @param type Bus type to search for
+     * @return List of buses of the specified type
      */
-    List<Bus> findByStatus(String status);
+    List<Bus> findByType(BusType type);
     
     /**
-     * Finds all buses by type.
+     * Find active buses
      * 
-     * @param type Type of the buses
-     * @return List of buses
+     * @return List of active buses
      */
-    List<Bus> findByType(String type);
+    List<Bus> findByActiveTrue();
     
     /**
-     * Finds all buses that need maintenance.
-     * This includes buses with status "Maintenance" and those due for scheduled maintenance.
+     * Find buses with tracking enabled
      * 
-     * @return List of buses
+     * @return List of buses with tracking enabled
      */
-    @Query("SELECT b FROM Bus b WHERE b.status = 'Maintenance' OR EXISTS (SELECT m FROM MaintenanceRecord m WHERE m.bus = b AND m.status = 'Scheduled')")
-    List<Bus> findBusesNeedingMaintenance();
+    List<Bus> findByTrackingEnabledTrue();
     
     /**
-     * Counts the number of buses with a specific status.
+     * Find buses with maintenance due
      * 
-     * @param status Status of the buses
-     * @return Number of buses
+     * @param today Today's date
+     * @return List of buses with maintenance due
      */
-    long countByStatus(String status);
+    List<Bus> findByNextMaintenanceDateLessThanEqual(LocalDate today);
     
     /**
-     * Finds all active buses that are available for scheduling.
+     * Find available buses (not assigned to any trips on a given date)
      * 
      * @return List of available buses
      */
-    @Query("SELECT b FROM Bus b WHERE b.status = 'Active' AND NOT EXISTS (SELECT s FROM Schedule s WHERE s.bus = b AND s.departureTime < CURRENT_TIMESTAMP AND s.arrivalTime > CURRENT_TIMESTAMP)")
+    @Query("SELECT b FROM Bus b WHERE b.active = true AND b.id NOT IN " +
+           "(SELECT t.bus.id FROM Trip t WHERE t.scheduledDepartureTime <= CURRENT_TIMESTAMP AND " +
+           "t.scheduledArrivalTime >= CURRENT_TIMESTAMP AND t.status <> 'COMPLETED' AND t.status <> 'CANCELLED')")
     List<Bus> findAvailableBuses();
 }

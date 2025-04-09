@@ -1,67 +1,50 @@
 package com.busmanagement.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
- * Entity representing a role in the system for authorization.
+ * Entity representing a user role in the system
  */
 @Entity
 @Table(name = "roles")
 public class Role {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(nullable = false, unique = true)
-    private String name;
-    
-    @Column
-    private String description;
-    
-    @OneToMany(mappedBy = "role")
-    private List<User> users;
-    
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    private Integer id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
+
+    /**
+     * Default constructor
+     */
+    public Role() {
     }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
+
+    /**
+     * Constructor with role name
+     * 
+     * @param name Role name
+     */
+    public Role(ERole name) {
         this.name = name;
     }
-    
-    public String getDescription() {
-        return description;
+
+    // Getters and setters
+    public Integer getId() {
+        return id;
     }
-    
-    public void setDescription(String description) {
-        this.description = description;
+
+    public void setId(Integer id) {
+        this.id = id;
     }
-    
-    public List<User> getUsers() {
-        return users;
+
+    public ERole getName() {
+        return name;
     }
-    
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-    
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+
+    public void setName(ERole name) {
+        this.name = name;
     }
 }

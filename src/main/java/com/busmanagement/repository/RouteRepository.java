@@ -6,80 +6,70 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Repository interface for Route entities.
- * Provides methods to interact with the routes table in the database.
+ * Repository for Route entity
  */
 @Repository
 public interface RouteRepository extends JpaRepository<Route, Long> {
     
     /**
-     * Finds all routes with a specific source city.
+     * Find a route by route code
      * 
-     * @param sourceId ID of the source city
-     * @return List of routes
+     * @param routeCode Route code to search for
+     * @return Optional containing the route if found
      */
-    List<Route> findBySourceId(Long sourceId);
+    Optional<Route> findByRouteCode(String routeCode);
     
     /**
-     * Finds all routes with a specific destination city.
+     * Find routes by source
      * 
-     * @param destinationId ID of the destination city
-     * @return List of routes
+     * @param source Source location to search for
+     * @return List of routes with the specified source
      */
-    List<Route> findByDestinationId(Long destinationId);
+    List<Route> findBySource(String source);
     
     /**
-     * Finds a route between specific source and destination cities.
+     * Find routes by destination
      * 
-     * @param sourceId ID of the source city
-     * @param destinationId ID of the destination city
-     * @return List of routes
+     * @param destination Destination location to search for
+     * @return List of routes with the specified destination
      */
-    List<Route> findBySourceIdAndDestinationId(Long sourceId, Long destinationId);
+    List<Route> findByDestination(String destination);
     
     /**
-     * Finds all routes with a distance less than or equal to the given value.
+     * Find routes by source and destination
      * 
-     * @param distance Maximum distance
-     * @return List of routes
+     * @param source Source location to search for
+     * @param destination Destination location to search for
+     * @return List of routes with the specified source and destination
      */
-    List<Route> findByDistanceLessThanEqual(Double distance);
+    List<Route> findBySourceAndDestination(String source, String destination);
     
     /**
-     * Finds the most popular routes based on the number of bookings.
+     * Find active routes
      * 
-     * @param startDate Start of the date range
-     * @param endDate End of the date range
-     * @param limit Maximum number of routes to return
-     * @return List of routes with booking counts
+     * @return List of active routes
      */
-    @Query(value = "SELECT r.*, COUNT(b.id) as booking_count FROM routes r " +
-           "JOIN schedules s ON r.id = s.route_id " +
-           "JOIN bookings b ON s.id = b.schedule_id " +
-           "WHERE b.booking_date BETWEEN :startDate AND :endDate " +
-           "GROUP BY r.id ORDER BY booking_count DESC LIMIT :limit", 
-           nativeQuery = true)
-    List<Object[]> findMostPopularRoutes(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("limit") int limit);
+    List<Route> findByIsActiveTrue();
     
     /**
-     * Calculates the average fare amount across all routes.
+     * Find routes by source or destination containing the given keyword
      * 
-     * @return Average fare amount
+     * @param keyword Keyword to search for in source or destination
+     * @return List of routes with source or destination containing the keyword
      */
-    @Query("SELECT AVG(r.fareAmount) FROM Route r")
-    Double getAverageFareAmount();
+    @Query("SELECT r FROM Route r WHERE r.source LIKE %:keyword% OR r.destination LIKE %:keyword%")
+    List<Route> findBySourceOrDestinationContaining(@Param("keyword") String keyword);
     
     /**
-     * Finds routes with fare amount in a specific range.
+     * Find routes that pass through a specific location (as a stop)
      * 
-     * @param minFare Minimum fare amount
-     * @param maxFare Maximum fare amount
-     * @return List of routes
+     * @param location Location to search for in route stops
+     * @return List of routes that pass through the specified location
      */
-    @Query("SELECT r FROM Route r WHERE r.fareAmount BETWEEN :minFare AND :maxFare")
-    List<Route> findByFareAmountBetween(@Param("minFare") Double minFare, @Param("maxFare") Double maxFare);
+    @Query("SELECT r FROM Route r JOIN r.stops s WHERE s.name LIKE %:location% OR s.city LIKE %:location%")
+    List<Route> findByStopLocation(@Param("location") String location);
 }

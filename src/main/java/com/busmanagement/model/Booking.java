@@ -1,151 +1,252 @@
 package com.busmanagement.model;
 
-import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * Entity representing a bus ticket booking in the system.
+ * Entity representing a booking in the system
  */
 @Entity
 @Table(name = "bookings")
 public class Booking {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Column(nullable = false, unique = true)
+    private String bookingNumber;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    
+    @JoinColumn(name = "passenger_id", nullable = false)
+    private Passenger passenger;
+
     @ManyToOne
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
-    
-    @Column(name = "booking_date", nullable = false)
-    private LocalDate bookingDate;
-    
-    @Column(name = "seat_numbers", nullable = false)
-    private String seatNumbers;
-    
-    @Column(name = "total_amount", nullable = false)
-    private double totalAmount;
-    
-    @Column(name = "status", nullable = false)
-    private String status; // PENDING_PAYMENT, PAID, CANCELLED, COMPLETED
-    
-    @Column(name = "created_at")
+    @JoinColumn(name = "trip_id", nullable = false)
+    private Trip trip;
+
+    private Integer numberOfSeats;
+    private Double totalFare;
+    private String pickupPoint;
+    private String dropoffPoint;
+
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status = BookingStatus.PENDING;
+
+    private LocalDateTime bookingTime;
+    private LocalDateTime cancellationTime;
+    private String cancellationReason;
+    private Boolean refundIssued = false;
+    private Double refundAmount;
+
+    @OneToMany(mappedBy = "booking")
+    private Set<Seat> seats = new HashSet<>();
+
+    @OneToOne(mappedBy = "booking")
+    private Payment payment;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-    
+
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
-    private Payment payment;
-    
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+
+    /**
+     * Default constructor
+     */
+    public Booking() {
     }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+
+    /**
+     * Constructor with required fields
+     * 
+     * @param bookingNumber Booking number
+     * @param passenger Passenger
+     * @param trip Trip
+     * @param numberOfSeats Number of seats
+     * @param totalFare Total fare
+     */
+    public Booking(String bookingNumber, Passenger passenger, Trip trip, Integer numberOfSeats, Double totalFare) {
+        this.bookingNumber = bookingNumber;
+        this.passenger = passenger;
+        this.trip = trip;
+        this.numberOfSeats = numberOfSeats;
+        this.totalFare = totalFare;
+        this.bookingTime = LocalDateTime.now();
     }
-    
-    // Getters and Setters
+
+    // Getters and setters
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
-    public User getUser() {
-        return user;
+
+    public String getBookingNumber() {
+        return bookingNumber;
     }
-    
-    public void setUser(User user) {
-        this.user = user;
+
+    public void setBookingNumber(String bookingNumber) {
+        this.bookingNumber = bookingNumber;
     }
-    
-    public Schedule getSchedule() {
-        return schedule;
+
+    public Passenger getPassenger() {
+        return passenger;
     }
-    
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
+
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
     }
-    
-    public LocalDate getBookingDate() {
-        return bookingDate;
+
+    public Trip getTrip() {
+        return trip;
     }
-    
-    public void setBookingDate(LocalDate bookingDate) {
-        this.bookingDate = bookingDate;
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
-    
-    public String getSeatNumbers() {
-        return seatNumbers;
+
+    public Integer getNumberOfSeats() {
+        return numberOfSeats;
     }
-    
-    public void setSeatNumbers(String seatNumbers) {
-        this.seatNumbers = seatNumbers;
+
+    public void setNumberOfSeats(Integer numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
     }
-    
-    public double getTotalAmount() {
-        return totalAmount;
+
+    public Double getTotalFare() {
+        return totalFare;
     }
-    
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
+
+    public void setTotalFare(Double totalFare) {
+        this.totalFare = totalFare;
     }
-    
-    public String getStatus() {
+
+    public String getPickupPoint() {
+        return pickupPoint;
+    }
+
+    public void setPickupPoint(String pickupPoint) {
+        this.pickupPoint = pickupPoint;
+    }
+
+    public String getDropoffPoint() {
+        return dropoffPoint;
+    }
+
+    public void setDropoffPoint(String dropoffPoint) {
+        this.dropoffPoint = dropoffPoint;
+    }
+
+    public BookingStatus getStatus() {
         return status;
     }
-    
-    public void setStatus(String status) {
+
+    public void setStatus(BookingStatus status) {
         this.status = status;
     }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+
+    public LocalDateTime getBookingTime() {
+        return bookingTime;
     }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+
+    public void setBookingTime(LocalDateTime bookingTime) {
+        this.bookingTime = bookingTime;
     }
-    
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+
+    public LocalDateTime getCancellationTime() {
+        return cancellationTime;
     }
-    
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+
+    public void setCancellationTime(LocalDateTime cancellationTime) {
+        this.cancellationTime = cancellationTime;
     }
-    
+
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
+    }
+
+    public Boolean getRefundIssued() {
+        return refundIssued;
+    }
+
+    public void setRefundIssued(Boolean refundIssued) {
+        this.refundIssued = refundIssued;
+    }
+
+    public Double getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(Double refundAmount) {
+        this.refundAmount = refundAmount;
+    }
+
+    public Set<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(Set<Seat> seats) {
+        this.seats = seats;
+    }
+
     public Payment getPayment() {
         return payment;
     }
-    
+
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
-    
-    @Override
-    public String toString() {
-        return "Booking{" +
-                "id=" + id +
-                ", user=" + user.getId() +
-                ", schedule=" + schedule.getId() +
-                ", bookingDate=" + bookingDate +
-                ", seatNumbers='" + seatNumbers + '\'' +
-                ", totalAmount=" + totalAmount +
-                ", status='" + status + '\'' +
-                '}';
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    /**
+     * Cancel this booking
+     * 
+     * @param reason Cancellation reason
+     * @param refundAmount Refund amount
+     */
+    public void cancel(String reason, Double refundAmount) {
+        this.status = BookingStatus.CANCELLED;
+        this.cancellationTime = LocalDateTime.now();
+        this.cancellationReason = reason;
+        this.refundAmount = refundAmount;
+        
+        if (refundAmount > 0) {
+            this.refundIssued = true;
+        }
+        
+        // Release the seats
+        if (this.trip != null) {
+            this.trip.cancelBooking(this.numberOfSeats);
+        }
     }
 }
