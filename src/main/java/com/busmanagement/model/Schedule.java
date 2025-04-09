@@ -52,8 +52,40 @@ public class Schedule {
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
+    @ManyToOne
+    @JoinColumn(name = "bus_id", nullable = false)
+    private Bus bus;
+
+    @ManyToOne
+    @JoinColumn(name = "driver_id", nullable = false)
+    private User driver;
+
+    @Column(name = "available_seats")
+    private Integer availableSeats;
+
+    @Column(name = "seat_map", columnDefinition = "TEXT")
+    private String seatMap;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "remarks")
+    private String remarks;
+
+    @Column(name = "current_latitude")
+    private Double currentLatitude;
+
+    @Column(name = "current_longitude")
+    private Double currentLongitude;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
+
     @OneToMany(mappedBy = "schedule")
     private Set<Trip> trips = new HashSet<>();
+
+    @OneToMany(mappedBy = "schedule")
+    private Set<Booking> bookings = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -155,6 +187,86 @@ public class Schedule {
 
     public void setTrips(Set<Trip> trips) {
         this.trips = trips;
+    }
+
+    public Bus getBus() {
+        return bus;
+    }
+
+    public void setBus(Bus bus) {
+        this.bus = bus;
+    }
+
+    public User getDriver() {
+        return driver;
+    }
+
+    public void setDriver(User driver) {
+        this.driver = driver;
+    }
+
+    public Integer getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(Integer availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
+    public String getSeatMap() {
+        return seatMap;
+    }
+
+    public void setSeatMap(String seatMap) {
+        this.seatMap = seatMap;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Double getCurrentLatitude() {
+        return currentLatitude;
+    }
+
+    public void setCurrentLatitude(Double currentLatitude) {
+        this.currentLatitude = currentLatitude;
+    }
+
+    public Double getCurrentLongitude() {
+        return currentLongitude;
+    }
+
+    public void setCurrentLongitude(Double currentLongitude) {
+        this.currentLongitude = currentLongitude;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Set<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(Set<Booking> bookings) {
+        this.bookings = bookings;
     }
 
     public LocalDateTime getCreatedAt() {

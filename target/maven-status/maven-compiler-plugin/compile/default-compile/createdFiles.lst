@@ -1,15 +1,7 @@
-com/busmanagement/model/Route.class
-com/busmanagement/dto/RouteDTO.class
-com/busmanagement/model/Bus.class
 com/busmanagement/model/Role.class
 com/busmanagement/model/Notification.class
-com/busmanagement/service/RouteService.class
-com/busmanagement/model/City.class
 com/busmanagement/model/User.class
+com/busmanagement/model/User$UserRole.class
 com/busmanagement/dto/PaymentDTO.class
-com/busmanagement/security/UserDetailsImpl.class
-com/busmanagement/model/MaintenanceRecord.class
-com/busmanagement/payload/request/SignupRequest.class
-com/busmanagement/model/Booking.class
 com/busmanagement/observer/NotificationSubscriber.class
-com/busmanagement/model/Payment.class
+com/busmanagement/model/Role$ERole.class

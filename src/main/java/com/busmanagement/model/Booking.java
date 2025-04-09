@@ -30,6 +30,10 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
+    
+    @ManyToOne
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private Schedule schedule;
 
     @NotNull
     private LocalDateTime bookingTime;

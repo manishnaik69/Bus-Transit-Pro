@@ -1,149 +1,296 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="layouts/base :: html(~{::title}, ~{::section}, ~{}, ~{})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>About Us</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Bus Management System</title>
 </head>
 <body>
-    <section th:fragment="content">
-        <div class="container py-5">
-            <div class="text-center mb-5">
-                <h1 class="display-4 fw-bold">About Us</h1>
-                <p class="lead">Learn more about our bus management system</p>
-            </div>
-            
-            <div class="row mb-5">
-                <div class="col-md-6">
-                    <h2 class="mb-3">Our Mission</h2>
-                    <p>Our mission is to revolutionize the bus transportation industry through innovative technology solutions that enhance operational efficiency, improve passenger experience, and promote sustainable transportation practices.</p>
-                    <p>We aim to connect communities, reduce environmental impact, and make bus travel a preferred mode of transportation through reliable, efficient, and modern services.</p>
-                </div>
-                <div class="col-md-6">
-                    <h2 class="mb-3">Our Vision</h2>
-                    <p>We envision a future where bus transportation is seamlessly integrated with smart city infrastructure, providing reliable, sustainable, and accessible mobility solutions for everyone.</p>
-                    <p>Our goal is to be at the forefront of this transformation, driving innovation in the bus transportation sector through cutting-edge technology and customer-centered service design.</p>
-                </div>
-            </div>
-            
-            <div class="bg-light p-4 rounded-3 mb-5">
-                <div class="row">
-                    <div class="col-md-4 text-center mb-3 mb-md-0">
-                        <div class="display-4 text-primary mb-2">
-                            <i class="fas fa-bus"></i>
+    <div th:replace="layouts/base :: html(~{::div.content})">
+        <div class="content">
+            <!-- About Hero Section -->
+            <section class="bg-primary text-white py-5 mb-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <h1 class="display-4 fw-bold mb-3">About Us</h1>
+                            <p class="lead">Learn more about the Bus Management System and our mission to transform public transportation.</p>
                         </div>
-                        <h3>Modern Fleet</h3>
-                        <p>Our extensive fleet of modern buses ensures comfortable and safe journeys for all passengers.</p>
-                    </div>
-                    <div class="col-md-4 text-center mb-3 mb-md-0">
-                        <div class="display-4 text-primary mb-2">
-                            <i class="fas fa-route"></i>
-                        </div>
-                        <h3>Extensive Routes</h3>
-                        <p>We connect major cities and towns with frequent and reliable bus services.</p>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="display-4 text-primary mb-2">
-                            <i class="fas fa-headset"></i>
-                        </div>
-                        <h3>Customer Support</h3>
-                        <p>Our dedicated support team is available 24/7 to assist you with any queries or concerns.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row mb-5">
-                <div class="col-12">
-                    <h2 class="mb-4">Our History</h2>
-                    <div class="position-relative">
-                        <div class="timeline-line"></div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="card shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">2010 - Foundation</h5>
-                                        <p class="card-text">Bus Management System was founded with a vision to modernize bus transportation services through technology.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-4">
-                            <div class="col-md-6 offset-md-6">
-                                <div class="card shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">2015 - Expansion</h5>
-                                        <p class="card-text">Expanded operations to cover major cities across the country, serving thousands of passengers daily.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="card shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">2018 - Digital Transformation</h5>
-                                        <p class="card-text">Launched our online booking platform and mobile app, revolutionizing how customers book and manage their journeys.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 offset-md-6">
-                                <div class="card shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title">2023 - Innovation</h5>
-                                        <p class="card-text">Introduced real-time tracking, advanced maintenance management, and sustainable fleet management practices.</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-lg-6">
+                            <img src="https://via.placeholder.com/600x400" alt="About Us" class="img-fluid rounded shadow">
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="mb-4">Our Team</h2>
+            </section>
+
+            <!-- Company Overview -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto text-center">
+                            <h2 class="fw-bold mb-4">Our Story</h2>
+                            <p class="lead text-muted mb-4">
+                                Founded in 2015, Bus Management System has been at the forefront of transforming public transportation through technology and innovation.
+                            </p>
+                            <p class="mb-4">
+                                We started with a simple mission: to make bus travel easier, more reliable, and more comfortable for everyone. What began as a small startup has grown into a comprehensive platform serving millions of passengers across India.
+                            </p>
+                            <p>
+                                Today, we connect hundreds of cities, manage thousands of buses, and help countless passengers reach their destinations safely and on time.
+                                Our integrated platform serves passengers, bus operators, drivers, and maintenance staff - creating a seamless ecosystem for modern bus transportation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mission & Vision -->
+            <section class="py-5 bg-light">
+                <div class="container">
                     <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body p-4 text-center">
+                                    <div class="bg-primary text-white rounded-circle mx-auto mb-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-bullseye fa-2x"></i>
                                     </div>
-                                    <h5 class="card-title">John Doe</h5>
-                                    <p class="card-subtitle mb-2 text-muted">Chief Executive Officer</p>
-                                    <p class="card-text">With over 20 years of experience in the transportation industry, John leads our company with vision and expertise.</p>
+                                    <h3 class="card-title mb-3">Our Mission</h3>
+                                    <p class="card-text">
+                                        To transform public transportation by providing a reliable, efficient, and user-friendly bus management system that benefits passengers, operators, and communities alike.
+                                    </p>
+                                    <p class="card-text">
+                                        We aim to make bus travel the preferred mode of transportation by enhancing its convenience, reliability, and comfort through innovative technology solutions.
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body p-4 text-center">
+                                    <div class="bg-primary text-white rounded-circle mx-auto mb-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-eye fa-2x"></i>
                                     </div>
-                                    <h5 class="card-title">Jane Smith</h5>
-                                    <p class="card-subtitle mb-2 text-muted">Chief Technology Officer</p>
-                                    <p class="card-text">Jane is the driving force behind our technological innovations, ensuring we stay at the cutting edge of the industry.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fas fa-user-circle fa-5x text-primary"></i>
-                                    </div>
-                                    <h5 class="card-title">Michael Johnson</h5>
-                                    <p class="card-subtitle mb-2 text-muted">Operations Director</p>
-                                    <p class="card-text">Michael ensures that our day-to-day operations run smoothly, maintaining our high standards of service.</p>
+                                    <h3 class="card-title mb-3">Our Vision</h3>
+                                    <p class="card-text">
+                                        To be the leading bus management platform globally, setting new standards for public transportation through cutting-edge technology and exceptional service.
+                                    </p>
+                                    <p class="card-text">
+                                        We envision a future where bus travel is the smartest, most sustainable, and most accessible transportation option for everyone, contributing to reduced traffic congestion and environmental impact.
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Core Values -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Our Core Values</h2>
+                        <p class="lead text-muted">The principles that guide everything we do</p>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <!-- Value 1 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="value-icon bg-primary text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-user-shield fa-2x"></i>
+                                    </div>
+                                    <h4 class="card-title mb-3">Safety First</h4>
+                                    <p class="card-text">We prioritize the safety of passengers, drivers, and everyone on the road above all else.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Value 2 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="value-icon bg-primary text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-rocket fa-2x"></i>
+                                    </div>
+                                    <h4 class="card-title mb-3">Innovation</h4>
+                                    <p class="card-text">We constantly seek new ways to improve bus travel through technology and creative solutions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Value 3 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="value-icon bg-primary text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-handshake fa-2x"></i>
+                                    </div>
+                                    <h4 class="card-title mb-3">Reliability</h4>
+                                    <p class="card-text">We deliver on our promises and ensure that our services are consistently dependable.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Value 4 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="value-icon bg-primary text-white rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-leaf fa-2x"></i>
+                                    </div>
+                                    <h4 class="card-title mb-3">Sustainability</h4>
+                                    <p class="card-text">We are committed to environmental responsibility and promoting sustainable transportation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Our Team -->
+            <section class="py-5 bg-light">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Our Leadership Team</h2>
+                        <p class="lead text-muted">Meet the people behind Bus Management System</p>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <!-- Team Member 1 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+                                <div class="card-body text-center p-4">
+                                    <h4 class="card-title mb-1">Rajesh Verma</h4>
+                                    <p class="text-muted mb-3">Founder & CEO</p>
+                                    <p class="card-text">With over 20 years of experience in transportation, Rajesh founded BMS with a vision to revolutionize bus travel in India.</p>
+                                    <div class="social-icons mt-3">
+                                        <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 2 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+                                <div class="card-body text-center p-4">
+                                    <h4 class="card-title mb-1">Priya Singh</h4>
+                                    <p class="text-muted mb-3">CTO</p>
+                                    <p class="card-text">A tech visionary with expertise in building scalable systems, Priya leads our technology innovation and development.</p>
+                                    <div class="social-icons mt-3">
+                                        <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 3 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+                                <div class="card-body text-center p-4">
+                                    <h4 class="card-title mb-1">Amit Kumar</h4>
+                                    <p class="text-muted mb-3">COO</p>
+                                    <p class="card-text">Amit manages our day-to-day operations, ensuring that our services run smoothly and efficiently across all regions.</p>
+                                    <div class="social-icons mt-3">
+                                        <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 4 -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+                                <div class="card-body text-center p-4">
+                                    <h4 class="card-title mb-1">Sonali Patel</h4>
+                                    <p class="text-muted mb-3">CMO</p>
+                                    <p class="card-text">With a passion for customer experience, Sonali heads our marketing strategies and brand development initiatives.</p>
+                                    <div class="social-icons mt-3">
+                                        <a href="#" class="text-primary me-2"><i class="fab fa-linkedin"></i></a>
+                                        <a href="#" class="text-primary"><i class="fas fa-envelope"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Our Impact -->
+            <section class="py-5">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Our Impact</h2>
+                        <p class="lead text-muted">How we're making a difference in transportation</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="row text-center g-4">
+                                <!-- Impact Stat 1 -->
+                                <div class="col-md-4">
+                                    <div class="impact-stat">
+                                        <h2 class="display-4 fw-bold text-primary mb-0">500+</h2>
+                                        <p class="lead">Cities Connected</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Impact Stat 2 -->
+                                <div class="col-md-4">
+                                    <div class="impact-stat">
+                                        <h2 class="display-4 fw-bold text-primary mb-0">10M+</h2>
+                                        <p class="lead">Happy Passengers</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Impact Stat 3 -->
+                                <div class="col-md-4">
+                                    <div class="impact-stat">
+                                        <h2 class="display-4 fw-bold text-primary mb-0">30%</h2>
+                                        <p class="lead">Carbon Reduction</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5">
+                                <p class="mb-4">
+                                    Our platform has transformed bus transportation across India, making it more accessible, reliable, and sustainable. By optimizing routes and schedules, we've helped reduce traffic congestion and carbon emissions while providing affordable transportation options for all.
+                                </p>
+                                <p>
+                                    Through our real-time tracking and digital ticketing, we've eliminated long queues and reduced paper waste. Our maintenance management has improved bus safety and reliability, while our data analytics have helped operators optimize their services based on actual demand patterns.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="py-5 bg-primary text-white">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8 mx-auto text-center">
+                            <h2 class="fw-bold mb-3">Join Us in Transforming Transportation</h2>
+                            <p class="lead mb-4">
+                                Whether you're a passenger looking for reliable transportation, a bus operator wanting to optimize your fleet, or a talented professional seeking to make an impact - we invite you to be part of our journey.
+                            </p>
+                            <div class="d-flex flex-wrap justify-content-center gap-3">
+                                <a th:href="@{/contact}" class="btn btn-light btn-lg">Contact Us</a>
+                                <a href="#" class="btn btn-outline-light btn-lg">Careers</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 </body>
 </html>

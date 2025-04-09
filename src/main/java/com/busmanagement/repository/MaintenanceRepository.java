@@ -1,6 +1,7 @@
 package com.busmanagement.repository;
 
 import com.busmanagement.model.MaintenanceRecord;
+import com.busmanagement.model.MaintenanceRecord.MaintenanceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,7 +31,7 @@ public interface MaintenanceRepository extends JpaRepository<MaintenanceRecord, 
      * @param status Status of the maintenance records
      * @return List of maintenance records
      */
-    List<MaintenanceRecord> findByStatus(String status);
+    List<MaintenanceRecord> findByStatus(MaintenanceStatus status);
     
     /**
      * Finds all maintenance records scheduled for a specific date.
@@ -46,7 +47,7 @@ public interface MaintenanceRepository extends JpaRepository<MaintenanceRecord, 
      * @param maintenanceType Type of maintenance
      * @return List of maintenance records
      */
-    List<MaintenanceRecord> findByMaintenanceType(String maintenanceType);
+    List<MaintenanceRecord> findByMaintenanceType(MaintenanceRecord.MaintenanceType maintenanceType);
     
     /**
      * Finds all maintenance records for a specific bus with a specific status.
@@ -55,7 +56,7 @@ public interface MaintenanceRepository extends JpaRepository<MaintenanceRecord, 
      * @param status Status of the maintenance records
      * @return List of maintenance records
      */
-    List<MaintenanceRecord> findByBusIdAndStatus(Long busId, String status);
+    List<MaintenanceRecord> findByBusIdAndStatus(Long busId, MaintenanceStatus status);
     
     /**
      * Finds the most recent maintenance record for each bus.
@@ -80,7 +81,7 @@ public interface MaintenanceRepository extends JpaRepository<MaintenanceRecord, 
      * @param status Status of the maintenance records
      * @return Number of maintenance records
      */
-    long countByStatus(String status);
+    long countByStatus(MaintenanceStatus status);
     
     /**
      * Gets the total cost of maintenance within a specific date range.

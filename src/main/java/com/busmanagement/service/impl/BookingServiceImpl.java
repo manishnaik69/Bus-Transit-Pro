@@ -96,24 +96,24 @@ public class BookingServiceImpl implements BookingService {
         }
         
         // Only allow cancellation if the booking is not already cancelled
-        if ("CANCELLED".equals(booking.getStatus())) {
+        if (Booking.BookingStatus.CANCELLED.equals(booking.getStatus())) {
             throw new IllegalStateException("Booking is already cancelled");
         }
         
         // Update booking status
-        booking.setStatus("CANCELLED");
+        booking.setStatus(Booking.BookingStatus.CANCELLED);
         Booking cancelledBooking = bookingRepository.save(booking);
         
         // Release the seats
         Schedule schedule = booking.getSchedule();
-        String[] seatNumbers = booking.getSeatNumbers().split(",");
+        List<String> seatNumbers = booking.getSeatNumbers();
         
         for (String seatNumber : seatNumbers) {
             scheduleService.updateSeatStatus(schedule.getId(), Integer.parseInt(seatNumber.trim()), "AVAILABLE");
         }
         
         // Update available seats count in the schedule
-        schedule.setAvailableSeats(schedule.getAvailableSeats() + seatNumbers.length);
+        schedule.setAvailableSeats(schedule.getAvailableSeats() + seatNumbers.size());
         scheduleService.updateSchedule(schedule.getId(), schedule);
         
         return cancelledBooking;
@@ -152,9 +152,7 @@ public class BookingServiceImpl implements BookingService {
         }
         
         // Check if booking status is valid
-        String status = booking.getStatus();
-        if (status == null || (!status.equals("PENDING_PAYMENT") && !status.equals("PAID") && 
-                !status.equals("CANCELLED") && !status.equals("COMPLETED"))) {
+        if (booking.getStatus() == null) {
             return false;
         }
         

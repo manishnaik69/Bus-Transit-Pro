@@ -1,31 +1,28 @@
 /**
  * Main JavaScript file for Bus Management System
  */
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Bootstrap tooltips
+    // Initialize tooltips
     initTooltips();
     
-    // Initialize Bootstrap popovers
+    // Initialize popovers
     initPopovers();
     
     // Initialize city selector
     initCitySelector();
     
-    // Initialize auto-dismissing alerts
+    // Initialize alert auto-dismiss
     initAlertDismiss();
     
-    // Initialize seat selection if on booking page
-    if (document.querySelector('.seat-grid')) {
-        initSeatSelection();
-    }
+    // Initialize seat selection
+    initSeatSelection();
     
-    // Initialize date picker if present
-    if (document.querySelector('.datepicker')) {
-        initDatePicker();
-    }
+    // Initialize date picker
+    initDatePicker();
     
-    // Add form submission handlers for booking
-    const bookingForm = document.querySelector('#bookingForm');
+    // Add event listener to booking form
+    const bookingForm = document.querySelector('.booking-form');
     if (bookingForm) {
         bookingForm.addEventListener('submit', handleBookingSubmit);
     }
@@ -36,8 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initTooltips() {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover'
+        });
     });
 }
 
@@ -46,7 +45,7 @@ function initTooltips() {
  */
 function initPopovers() {
     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    popoverTriggerList.map(function(popoverTriggerEl) {
+    popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl);
     });
 }
@@ -55,35 +54,85 @@ function initPopovers() {
  * Initialize city selector with popular Indian cities
  */
 function initCitySelector() {
-    const citySelectors = document.querySelectorAll('.city-selector');
-    if (citySelectors.length === 0) return;
-    
+    // This could be loaded from an API in a real implementation
     const popularCities = [
-        'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 
+        'Bangalore', 'Mumbai', 'Delhi', 'Chennai', 'Hyderabad', 
         'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow',
-        'Kochi', 'Goa', 'Chandigarh', 'Indore', 'Bhopal'
+        'Surat', 'Kochi', 'Chandigarh', 'Indore', 'Bhopal'
     ];
     
-    citySelectors.forEach(selector => {
+    const fromCitySelect = document.getElementById('fromCity');
+    const toCitySelect = document.getElementById('toCity');
+    
+    if (fromCitySelect && toCitySelect) {
+        // Clear existing options except the default one
+        fromCitySelect.innerHTML = '<option value="" selected disabled>Select departure city</option>';
+        toCitySelect.innerHTML = '<option value="" selected disabled>Select destination city</option>';
+        
+        // Add city options
         popularCities.forEach(city => {
-            const option = document.createElement('option');
-            option.value = city;
-            option.textContent = city;
-            selector.appendChild(option);
+            const fromOption = document.createElement('option');
+            fromOption.value = city.toLowerCase();
+            fromOption.textContent = city;
+            fromCitySelect.appendChild(fromOption);
+            
+            const toOption = document.createElement('option');
+            toOption.value = city.toLowerCase();
+            toOption.textContent = city;
+            toCitySelect.appendChild(toOption);
         });
-    });
+        
+        // Add change event to prevent same city selection
+        fromCitySelect.addEventListener('change', function() {
+            const selectedCity = this.value;
+            
+            // Enable all options in the to-city dropdown
+            Array.from(toCitySelect.options).forEach(option => {
+                option.disabled = false;
+            });
+            
+            // Disable the option that matches the from-city
+            const matchingOption = Array.from(toCitySelect.options).find(option => option.value === selectedCity);
+            if (matchingOption) {
+                matchingOption.disabled = true;
+            }
+            
+            // If the currently selected to-city is the same as the new from-city, reset it
+            if (toCitySelect.value === selectedCity) {
+                toCitySelect.value = '';
+            }
+        });
+        
+        // Similar logic for the to-city dropdown
+        toCitySelect.addEventListener('change', function() {
+            const selectedCity = this.value;
+            
+            Array.from(fromCitySelect.options).forEach(option => {
+                option.disabled = false;
+            });
+            
+            const matchingOption = Array.from(fromCitySelect.options).find(option => option.value === selectedCity);
+            if (matchingOption) {
+                matchingOption.disabled = true;
+            }
+            
+            if (fromCitySelect.value === selectedCity) {
+                fromCitySelect.value = '';
+            }
+        });
+    }
 }
 
 /**
  * Initialize auto-dismissing alerts
  */
 function initAlertDismiss() {
-    const autoAlerts = document.querySelectorAll('.alert.auto-dismiss');
+    const autoAlerts = document.querySelectorAll('.alert:not(.alert-persistent)');
     autoAlerts.forEach(alert => {
         setTimeout(() => {
             const bsAlert = new bootstrap.Alert(alert);
             bsAlert.close();
-        }, 5000);
+        }, 5000); // Auto dismiss after 5 seconds
     });
 }
 
@@ -91,57 +140,76 @@ function initAlertDismiss() {
  * Initialize seat selection functionality
  */
 function initSeatSelection() {
-    const seats = document.querySelectorAll('.seat.available');
-    const selectedSeatsInput = document.getElementById('selectedSeats');
-    const seatCountDisplay = document.getElementById('seatCount');
-    const totalPriceDisplay = document.getElementById('totalPrice');
-    const pricePerSeat = Number(document.getElementById('pricePerSeat')?.value || 0);
-    
-    let selectedSeats = [];
-    
-    seats.forEach(seat => {
-        seat.addEventListener('click', function() {
-            const seatId = this.getAttribute('data-seat-id');
-            
-            if (this.classList.contains('selected')) {
-                // Deselect seat
-                this.classList.remove('selected');
-                selectedSeats = selectedSeats.filter(id => id !== seatId);
-            } else {
-                // Select seat
-                this.classList.add('selected');
-                selectedSeats.push(seatId);
-            }
-            
-            // Update selected seats input and displays
-            selectedSeatsInput.value = selectedSeats.join(',');
-            if (seatCountDisplay) {
-                seatCountDisplay.textContent = selectedSeats.length;
-            }
-            if (totalPriceDisplay && pricePerSeat) {
-                totalPriceDisplay.textContent = (selectedSeats.length * pricePerSeat).toFixed(2);
-            }
+    const seatMap = document.querySelector('.seat-map');
+    if (seatMap) {
+        const seats = seatMap.querySelectorAll('.seat:not(.booked):not(.driver)');
+        const selectedSeatsInput = document.getElementById('selectedSeats');
+        const seatCountDisplay = document.getElementById('seatCount');
+        const totalFareDisplay = document.getElementById('totalFare');
+        const baseFare = parseFloat(document.getElementById('baseFare')?.value || 0);
+        
+        let selectedSeats = [];
+        
+        seats.forEach(seat => {
+            seat.addEventListener('click', function() {
+                const seatNumber = this.dataset.seat;
+                
+                if (this.classList.contains('selected')) {
+                    // Deselect the seat
+                    this.classList.remove('selected');
+                    selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+                } else {
+                    // Select the seat
+                    this.classList.add('selected');
+                    selectedSeats.push(seatNumber);
+                }
+                
+                // Update the hidden input with selected seats
+                if (selectedSeatsInput) {
+                    selectedSeatsInput.value = selectedSeats.join(',');
+                }
+                
+                // Update the seat count display
+                if (seatCountDisplay) {
+                    seatCountDisplay.textContent = selectedSeats.length;
+                }
+                
+                // Update the total fare
+                if (totalFareDisplay) {
+                    const totalFare = baseFare * selectedSeats.length;
+                    totalFareDisplay.textContent = '₹' + totalFare.toFixed(2);
+                }
+                
+                // Enable/disable the continue button based on selection
+                const continueBtn = document.getElementById('continueButton');
+                if (continueBtn) {
+                    continueBtn.disabled = selectedSeats.length === 0;
+                }
+            });
         });
-    });
+    }
 }
 
 /**
  * Initialize date picker with current date and disable past dates
  */
 function initDatePicker() {
-    const datePickers = document.querySelectorAll('.datepicker');
-    
-    datePickers.forEach(picker => {
+    const journeyDateInput = document.getElementById('journeyDate');
+    if (journeyDateInput) {
         // Set min date to today
         const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
-        picker.setAttribute('min', formattedDate);
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        const yyyy = today.getFullYear();
+        const todayFormatted = yyyy + '-' + mm + '-' + dd;
         
-        // If no date is selected, set default to today
-        if (!picker.value) {
-            picker.value = formattedDate;
+        journeyDateInput.setAttribute('min', todayFormatted);
+        
+        // Set default value to today
+        if (!journeyDateInput.value) {
+            journeyDateInput.value = todayFormatted;
         }
-    });
+    }
 }
 
 /**
@@ -149,12 +217,18 @@ function initDatePicker() {
  * @param {Event} event - Form submit event
  */
 function handleBookingSubmit(event) {
-    const selectedSeats = document.getElementById('selectedSeats').value;
+    const fromCity = document.getElementById('fromCity').value;
+    const toCity = document.getElementById('toCity').value;
     
-    if (!selectedSeats) {
+    if (fromCity === toCity) {
         event.preventDefault();
-        alert('Please select at least one seat before proceeding.');
+        alert('Departure and destination cities cannot be the same.');
+        return false;
     }
+    
+    // Additional validation can be added here
+    
+    return true;
 }
 
 /**

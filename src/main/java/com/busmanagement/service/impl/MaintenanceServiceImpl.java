@@ -72,8 +72,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Transactional
     public MaintenanceRecord scheduleMaintenance(MaintenanceRecord maintenanceRecord) {
         // Set default status if not provided
-        if (maintenanceRecord.getStatus() == null || maintenanceRecord.getStatus().trim().isEmpty()) {
-            maintenanceRecord.setStatus("Scheduled");
+        if (maintenanceRecord.getStatus() == null) {
+            maintenanceRecord.setStatus(MaintenanceRecord.MaintenanceStatus.SCHEDULED);
         }
         
         // Validate the maintenance record
@@ -112,21 +112,28 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     @Transactional
-    public MaintenanceRecord updateMaintenanceStatus(Long maintenanceId, String status) {
+    public MaintenanceRecord updateMaintenanceStatus(Long maintenanceId, String statusStr) {
         MaintenanceRecord maintenanceRecord = findMaintenanceRecordById(maintenanceId);
         if (maintenanceRecord == null) {
             throw new IllegalArgumentException("Maintenance record not found with id: " + maintenanceId);
         }
         
+        MaintenanceRecord.MaintenanceStatus status;
+        try {
+            status = MaintenanceRecord.MaintenanceStatus.valueOf(statusStr.toUpperCase().replace(" ", "_"));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid maintenance status: " + statusStr);
+        }
+        
         maintenanceRecord.setStatus(status);
         
         // If maintenance is completed, update the bus status back to Active
-        if ("Completed".equals(status)) {
+        if (MaintenanceRecord.MaintenanceStatus.COMPLETED == status) {
             Bus bus = maintenanceRecord.getBus();
             
             // Check if there are any other scheduled or in-progress maintenance records for this bus
-            List<MaintenanceRecord> activeRecords = maintenanceRepository.findByBusIdAndStatus(bus.getId(), "Scheduled");
-            activeRecords.addAll(maintenanceRepository.findByBusIdAndStatus(bus.getId(), "In Progress"));
+            List<MaintenanceRecord> activeRecords = maintenanceRepository.findByBusIdAndStatus(bus.getId(), MaintenanceRecord.MaintenanceStatus.SCHEDULED);
+            activeRecords.addAll(maintenanceRepository.findByBusIdAndStatus(bus.getId(), MaintenanceRecord.MaintenanceStatus.IN_PROGRESS));
             
             // Filter out the current record
             activeRecords = activeRecords.stream()
@@ -165,7 +172,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
                 statusMap.put(bus.getId(), "No maintenance records");
             } else {
                 MaintenanceRecord latestRecord = records.get(0);
-                statusMap.put(bus.getId(), latestRecord.getStatus());
+                statusMap.put(bus.getId(), latestRecord.getStatus().toString());
             }
         }
         
@@ -203,7 +210,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         }
         
         // Check if maintenance type is valid
-        if (record.getMaintenanceType() == null || record.getMaintenanceType().trim().isEmpty()) {
+        if (record.getMaintenanceType() == null) {
             return false;
         }
         
@@ -218,8 +225,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         }
         
         // Check if status is valid
-        String status = record.getStatus();
-        if (status == null || (!status.equals("Scheduled") && !status.equals("In Progress") && !status.equals("Completed"))) {
+        if (record.getStatus() == null) {
             return false;
         }
         

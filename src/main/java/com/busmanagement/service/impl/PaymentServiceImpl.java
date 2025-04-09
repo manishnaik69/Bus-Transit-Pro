@@ -53,7 +53,12 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<Payment> findPaymentsByStatus(String status) {
-        return paymentRepository.findByPaymentStatus(status);
+        try {
+            Payment.PaymentStatus paymentStatus = Payment.PaymentStatus.valueOf(status);
+            return paymentRepository.findByPaymentStatus(paymentStatus);
+        } catch (IllegalArgumentException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -88,8 +93,8 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = new Payment();
         payment.setBooking(booking);
         payment.setAmount(paymentDTO.getAmount());
-        payment.setPaymentMethod(paymentDTO.getPaymentMethod());
-        payment.setPaymentStatus("Completed");
+        payment.setPaymentMethod(Payment.PaymentMethod.valueOf(paymentDTO.getPaymentMethod()));
+        payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED);
         payment.setPaymentDate(LocalDateTime.now());
         
         // Generate transaction ID
@@ -100,7 +105,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment = paymentRepository.save(payment);
         
         // Update booking status
-        booking.setStatus("PAID");
+        booking.setStatus(Booking.BookingStatus.CONFIRMED);
         booking.setPayment(payment);
         bookingRepository.save(booking);
         
@@ -131,9 +136,9 @@ public class PaymentServiceImpl implements PaymentService {
         Payment savedPayment = paymentRepository.save(payment);
         
         // Update booking status if payment is completed
-        if ("Completed".equals(payment.getPaymentStatus())) {
+        if (Payment.PaymentStatus.COMPLETED.equals(payment.getPaymentStatus())) {
             Booking booking = payment.getBooking();
-            booking.setStatus("PAID");
+            booking.setStatus(Booking.BookingStatus.CONFIRMED);
             booking.setPayment(savedPayment);
             bookingRepository.save(booking);
         }
@@ -165,16 +170,23 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalArgumentException("Payment not found with id: " + paymentId);
         }
         
-        payment.setPaymentStatus(status);
+        Payment.PaymentStatus paymentStatus;
+        try {
+            paymentStatus = Payment.PaymentStatus.valueOf(status);
+            payment.setPaymentStatus(paymentStatus);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid payment status: " + status);
+        }
         
         // Update booking status if payment status changes
-        if ("Completed".equals(status)) {
+        if (Payment.PaymentStatus.COMPLETED.equals(paymentStatus)) {
             Booking booking = payment.getBooking();
-            booking.setStatus("PAID");
+            booking.setStatus(Booking.BookingStatus.CONFIRMED);
             bookingRepository.save(booking);
-        } else if ("Failed".equals(status) || "Refunded".equals(status)) {
+        } else if (Payment.PaymentStatus.FAILED.equals(paymentStatus) || 
+                  Payment.PaymentStatus.REFUNDED.equals(paymentStatus)) {
             Booking booking = payment.getBooking();
-            booking.setStatus("PENDING_PAYMENT");
+            booking.setStatus(Booking.BookingStatus.PENDING);
             bookingRepository.save(booking);
         }
         
@@ -195,12 +207,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
         
         // Process refund
-        payment.setPaymentStatus("Refunded");
+        payment.setPaymentStatus(Payment.PaymentStatus.REFUNDED);
         payment = paymentRepository.save(payment);
         
         // Update booking status
         Booking booking = payment.getBooking();
-        booking.setStatus("CANCELLED");
+        booking.setStatus(Booking.BookingStatus.CANCELLED);
         bookingRepository.save(booking);
         
         // Send notification
@@ -271,14 +283,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
         
         // Check if payment method is valid
-        if (payment.getPaymentMethod() == null || payment.getPaymentMethod().trim().isEmpty()) {
+        if (payment.getPaymentMethod() == null) {
             return false;
         }
         
         // Check if payment status is valid
-        String status = payment.getPaymentStatus();
-        if (status == null || (!status.equals("Pending") && !status.equals("Completed") && 
-                              !status.equals("Failed") && !status.equals("Refunded"))) {
+        if (payment.getPaymentStatus() == null) {
             return false;
         }
         
