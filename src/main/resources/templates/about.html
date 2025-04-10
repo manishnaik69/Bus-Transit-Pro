@@ -1,187 +1,86 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle}">About - Bus Management System</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .about-hero {
-            background-color: #343a40;
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-        }
-        
-        .team-member {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .team-member img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1rem;
-        }
-        
-        .architecture-card {
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .pattern-icon {
-            font-size: 3rem;
-            color: #007bff;
-            margin-bottom: 1rem;
-        }
-    </style>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>About</title>
 </head>
 <body>
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">Bus Management System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/buses">Buses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/routes">Routes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/schedules">Schedules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/about">About</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- About Hero Section -->
-    <section class="about-hero">
-        <div class="container">
-            <h1 class="display-4">About the Bus Management System</h1>
-            <p class="lead">Learn about our system, architecture, and the team behind it</p>
-        </div>
-    </section>
-
-    <!-- About Content -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2>Our Mission</h2>
-                    <p class="lead">To simplify and enhance the management of bus operations through a comprehensive digital solution.</p>
-                    <p>The Bus Management System is designed to streamline and optimize the operations of bus services, providing a centralized platform for managing routes, schedules, fleet maintenance, and passenger bookings. It aims to improve efficiency, reduce operational costs, and enhance the overall experience for both operators and passengers.</p>
-                    
-                    <h2 class="mt-5">System Architecture</h2>
-                    <p>The Bus Management System is built using the Spring Framework and follows the MVC (Model-View-Controller) architecture pattern. It incorporates several design patterns to enhance the system's maintainability, scalability, and performance.</p>
-                    
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="card architecture-card p-4">
-                                <div class="text-center">
-                                    <div class="pattern-icon">
-                                        <i class="fas fa-layer-group"></i>
-                                    </div>
-                                    <h3>MVC Architecture</h3>
-                                </div>
-                                <p>The system follows a strict Model-View-Controller architecture:</p>
-                                <ul>
-                                    <li><strong>Model:</strong> Represents the data and business logic</li>
-                                    <li><strong>View:</strong> Thymeleaf templates for rendering HTML</li>
-                                    <li><strong>Controller:</strong> Handles user requests and updates models</li>
-                                </ul>
-                            </div>
-                        </div>
+    <nav th:replace="layout/main :: nav"></nav>
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">About Bus Management System</h2>
                         
-                        <div class="col-md-6">
-                            <div class="card architecture-card p-4">
-                                <div class="text-center">
-                                    <div class="pattern-icon">
-                                        <i class="fas fa-puzzle-piece"></i>
-                                    </div>
-                                    <h3>Design Patterns</h3>
-                                </div>
-                                <ul>
-                                    <li><strong>Singleton Pattern:</strong> Used in service components</li>
-                                    <li><strong>Factory Pattern:</strong> For creating repository instances</li>
-                                    <li><strong>Facade Pattern:</strong> Simplifying complex subsystems</li>
-                                    <li><strong>Observer Pattern:</strong> For event handling and notifications</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="card architecture-card p-4">
-                                <div class="text-center">
-                                    <div class="pattern-icon">
-                                        <i class="fas fa-check-square"></i>
-                                    </div>
-                                    <h3>Design Principles</h3>
-                                </div>
-                                <ul>
-                                    <li><strong>SOLID Principles:</strong> For clean, maintainable code</li>
-                                    <li><strong>GRASP Principles:</strong> For proper object assignment</li>
-                                    <li><strong>DRY (Don't Repeat Yourself):</strong> Reducing duplication</li>
-                                    <li><strong>KISS (Keep It Simple, Stupid):</strong> Maintaining simplicity</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <p class="lead">
+                            The Bus Management System is a comprehensive solution designed to streamline bus operations 
+                            and enhance user experience through modern web technologies.
+                        </p>
                         
-                        <div class="col-md-6">
-                            <div class="card architecture-card p-4">
-                                <div class="text-center">
-                                    <div class="pattern-icon">
-                                        <i class="fas fa-database"></i>
+                        <h4 class="mt-4">Key Features:</h4>
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Fleet Management - Add, update, and track buses in your fleet
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Route Planning - Create and optimize routes for maximum efficiency
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Schedule Management - Create and manage bus schedules
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Booking System - Allow passengers to book tickets online
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Reporting - Generate reports on bus operations, bookings, etc.
+                            </li>
+                        </ul>
+                        
+                        <h4 class="mt-4">Technologies Used:</h4>
+                        <div class="row text-center mt-3">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Backend</h5>
+                                        <p class="card-text">Java Spring Boot</p>
+                                        <p class="card-text">Spring Data JPA</p>
+                                        <p class="card-text">PostgreSQL</p>
                                     </div>
-                                    <h3>Database Integration</h3>
                                 </div>
-                                <p>The system uses Spring Data JPA to interact with PostgreSQL database, enabling:</p>
-                                <ul>
-                                    <li>Object-Relational Mapping (ORM)</li>
-                                    <li>Transactional operations</li>
-                                    <li>Repository pattern implementation</li>
-                                    <li>Efficient data access and manipulation</li>
-                                </ul>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Frontend</h5>
+                                        <p class="card-text">Thymeleaf</p>
+                                        <p class="card-text">Bootstrap 5</p>
+                                        <p class="card-text">jQuery</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Architecture</h5>
+                                        <p class="card-text">MVC Pattern</p>
+                                        <p class="card-text">Design Patterns</p>
+                                        <p class="card-text">RESTful API</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Bus Management System</h5>
-                    <p class="mb-0">A comprehensive solution for managing bus operations</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0">&copy; 2023 Bus Management System. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
 </body>
 </html>

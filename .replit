@@ -27,11 +27,11 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd /home/runner/workspace && mvn spring-boot:run"
+args = "cd /home/runner/workspace && mvn clean package spring-boot:run -Dspring-boot.run.main-class=com.busmanagement.SimpleWebApp -Dspring-boot.run.arguments=--spring.main.allow-bean-definition-overriding=true"
 waitForPort = 5000
 
 [deployment]
-run = ["sh", "-c", "cd /home/runner/workspace && mvn spring-boot:run"]
+run = ["sh", "-c", "cd /home/runner/workspace && mvn clean package spring-boot:run -Dspring-boot.run.main-class=com.busmanagement.SimpleWebApp -Dspring-boot.run.arguments=--spring.main.allow-bean-definition-overriding=true"]
 
 [[ports]]
 localPort = 5000
