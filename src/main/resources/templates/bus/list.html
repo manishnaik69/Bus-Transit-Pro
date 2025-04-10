@@ -50,11 +50,11 @@
                                 <td th:text="${bus.model}">Starbus</td>
                                 <td th:text="${bus.capacity}">45</td>
                                 <td>
-                                    <span th:if="${bus.status == T(com.busmanagement.SimpleWebApp.Bus.BusStatus).ACTIVE}" 
+                                    <span th:if="${bus.status.name() == 'ACTIVE'}" 
                                           class="badge bg-success">Active</span>
-                                    <span th:if="${bus.status == T(com.busmanagement.SimpleWebApp.Bus.BusStatus).MAINTENANCE}" 
+                                    <span th:if="${bus.status.name() == 'MAINTENANCE'}" 
                                           class="badge bg-warning">Maintenance</span>
-                                    <span th:if="${bus.status == T(com.busmanagement.SimpleWebApp.Bus.BusStatus).RETIRED}" 
+                                    <span th:if="${bus.status.name() == 'RETIRED'}" 
                                           class="badge bg-secondary">Retired</span>
                                 </td>
                                 <td>

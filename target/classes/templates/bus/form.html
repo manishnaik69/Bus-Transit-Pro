@@ -7,71 +7,61 @@
     <nav th:replace="layout/main :: nav"></nav>
     
     <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0" th:text="${bus.id != null ? 'Edit Bus' : 'Add New Bus'}">Add/Edit Bus</h4>
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0" th:text="${bus.id == null ? 'Add New Bus' : 'Edit Bus'}">Add/Edit Bus</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/buses/save}" th:object="${bus}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <input type="hidden" th:field="*{createdAt}" />
+                    
+                    <div class="mb-3 row">
+                        <label for="registrationNumber" class="col-sm-3 col-form-label">Registration Number:</label>
+                        <div class="col-sm-9">
+                            <input type="text" th:field="*{registrationNumber}" class="form-control" id="registrationNumber" required>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form th:action="@{/buses/save}" th:object="${bus}" method="post">
-                            <input type="hidden" th:field="*{id}" />
-                            
-                            <div class="mb-3">
-                                <label for="registrationNumber" class="form-label">Registration Number</label>
-                                <input type="text" class="form-control" id="registrationNumber" 
-                                       th:field="*{registrationNumber}" required 
-                                       placeholder="e.g., KA-01-AB-1234">
-                                <div class="text-danger" th:if="${#fields.hasErrors('registrationNumber')}" 
-                                     th:errors="*{registrationNumber}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="manufacturer" class="form-label">Manufacturer</label>
-                                <input type="text" class="form-control" id="manufacturer" 
-                                       th:field="*{manufacturer}" required 
-                                       placeholder="e.g., Tata, Volvo, etc.">
-                                <div class="text-danger" th:if="${#fields.hasErrors('manufacturer')}" 
-                                     th:errors="*{manufacturer}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="model" class="form-label">Model</label>
-                                <input type="text" class="form-control" id="model" 
-                                       th:field="*{model}" required 
-                                       placeholder="e.g., Starbus, Marcopolo, etc.">
-                                <div class="text-danger" th:if="${#fields.hasErrors('model')}" 
-                                     th:errors="*{model}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="capacity" class="form-label">Seating Capacity</label>
-                                <input type="number" class="form-control" id="capacity" 
-                                       th:field="*{capacity}" required min="1" max="100">
-                                <div class="text-danger" th:if="${#fields.hasErrors('capacity')}" 
-                                     th:errors="*{capacity}"></div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" th:field="*{status}" required>
-                                    <option th:each="statusOpt : ${T(com.busmanagement.SimpleWebApp.Bus.BusStatus).values()}"
-                                            th:value="${statusOpt}" 
-                                            th:text="${statusOpt}">ACTIVE</option>
-                                </select>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between mt-4">
-                                <a th:href="@{/buses}" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left"></i> Back to List
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Save Bus
-                                </button>
-                            </div>
-                        </form>
+                    
+                    <div class="mb-3 row">
+                        <label for="manufacturer" class="col-sm-3 col-form-label">Manufacturer:</label>
+                        <div class="col-sm-9">
+                            <input type="text" th:field="*{manufacturer}" class="form-control" id="manufacturer" required>
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="model" class="col-sm-3 col-form-label">Model:</label>
+                        <div class="col-sm-9">
+                            <input type="text" th:field="*{model}" class="form-control" id="model" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="capacity" class="col-sm-3 col-form-label">Capacity:</label>
+                        <div class="col-sm-9">
+                            <input type="number" th:field="*{capacity}" class="form-control" id="capacity" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="status" class="col-sm-3 col-form-label">Status:</label>
+                        <div class="col-sm-9">
+                            <select th:field="*{status}" class="form-select" id="status" required>
+                                <option value="ACTIVE">ACTIVE</option>
+                                <option value="MAINTENANCE">MAINTENANCE</option>
+                                <option value="RETIRED">RETIRED</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a th:href="@{/buses}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
