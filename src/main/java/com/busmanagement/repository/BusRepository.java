@@ -2,62 +2,55 @@ package com.busmanagement.repository;
 
 import com.busmanagement.model.Bus;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository for Bus entity
  */
 @Repository
 public interface BusRepository extends JpaRepository<Bus, Long> {
-    /**
-     * Find buses that need maintenance based on mileage and last maintenance date
-     * @return List of buses that need maintenance
-     */
-    @Query("SELECT b FROM Bus b WHERE b.mileage > b.maintenanceThreshold OR " +
-           "(b.lastMaintenanceDate IS NOT NULL AND DATEDIFF(CURRENT_DATE, b.lastMaintenanceDate) > 30)")
-    List<Bus> findBusesNeedingMaintenance();
     
     /**
-     * Find a bus by registration number
-     * @param registrationNumber the registration number to search for
-     * @return the bus if found
+     * Find a bus by its registration number
+     * @param registrationNumber The registration number
+     * @return The bus if found
      */
-    @Query("SELECT b FROM Bus b WHERE b.registrationNumber = :registrationNumber")
-    Optional<Bus> findByRegistrationNumber(@Param("registrationNumber") String registrationNumber);
+    Bus findByRegistrationNumber(String registrationNumber);
     
     /**
-     * Find buses by status
-     * @param status the status to search for
-     * @return list of buses with the status
+     * Find buses by their status
+     * @param status The status to search for
+     * @return List of buses with the given status
      */
-    @Query("SELECT b FROM Bus b WHERE b.status = :status")
-    List<Bus> findByStatus(@Param("status") String status);
+    List<Bus> findByStatus(Bus.BusStatus status);
     
     /**
-     * Find buses by type
-     * @param type the bus type
-     * @return list of buses with the type
+     * Count buses by their status
+     * @param status The status to count
+     * @return The count of buses with the given status
      */
-    @Query("SELECT b FROM Bus b WHERE b.type = :type")
-    List<Bus> findByType(@Param("type") Bus.BusType type);
+    long countByStatus(Bus.BusStatus status);
     
     /**
-     * Find available buses
-     * @return list of available buses
+     * Find buses by manufacturer
+     * @param manufacturer The manufacturer to search for
+     * @return List of buses from the given manufacturer
      */
-    @Query("SELECT b FROM Bus b WHERE b.status = 'Active'")
-    List<Bus> findAvailableBuses();
+    List<Bus> findByManufacturer(String manufacturer);
     
     /**
-     * Count buses by status
-     * @param status the status to count
-     * @return count of buses with the status
+     * Find buses by bus type
+     * @param busType The bus type to search for
+     * @return List of buses of the given type
      */
-    @Query("SELECT COUNT(b) FROM Bus b WHERE b.status = :status")
-    long countByStatus(@Param("status") String status);
+    List<Bus> findByBusType(Bus.BusType busType);
+    
+    /**
+     * Find buses by capacity greater than or equal to the given value
+     * @param capacity The minimum capacity
+     * @return List of buses with capacity >= the given value
+     */
+    List<Bus> findByCapacityGreaterThanEqual(int capacity);
 }

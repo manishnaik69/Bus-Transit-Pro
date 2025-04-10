@@ -1,121 +1,80 @@
 package com.busmanagement.service;
 
-import com.busmanagement.dto.BusDTO;
 import com.busmanagement.model.Bus;
-
 import java.util.List;
 
 /**
- * Service interface for managing bus operations.
+ * Service interface for bus operations
  */
 public interface BusService {
     
     /**
-     * Finds a bus by its ID.
-     * 
-     * @param id ID of the bus
-     * @return The bus, or null if not found
-     */
-    Bus findBusById(Long id);
-    
-    /**
-     * Finds a bus by its registration number.
-     * 
-     * @param registrationNumber Registration number of the bus
-     * @return The bus, or null if not found
-     */
-    Bus findBusByRegistrationNumber(String registrationNumber);
-    
-    /**
-     * Finds all buses in the system.
-     * 
+     * Find all buses
      * @return List of all buses
      */
     List<Bus> findAllBuses();
     
     /**
-     * Finds all buses with a specific status.
-     * 
-     * @param status Status of the buses
-     * @return List of buses
+     * Find bus by ID
+     * @param id The bus ID
+     * @return The bus if found
      */
-    List<Bus> findBusesByStatus(String status);
+    Bus findBusById(Long id);
     
     /**
-     * Finds all buses of a specific type.
-     * 
-     * @param type Type of the buses
-     * @return List of buses
+     * Find bus by registration number
+     * @param registrationNumber The registration number
+     * @return The bus if found
      */
-    List<Bus> findBusesByType(String type);
+    Bus findBusByRegistrationNumber(String registrationNumber);
     
     /**
-     * Finds all buses that are available for scheduling.
-     * 
-     * @return List of available buses
-     */
-    List<Bus> findAvailableBuses();
-    
-    /**
-     * Saves a new bus from a DTO.
-     * 
-     * @param busDTO The bus data to save
+     * Save a new bus
+     * @param bus The bus to save
      * @return The saved bus
      */
-    Bus saveBus(BusDTO busDTO);
+    Bus saveBus(Bus bus);
     
     /**
-     * Updates an existing bus from a DTO.
-     * 
-     * @param id ID of the bus to update
-     * @param busDTO The updated bus data
+     * Update an existing bus
+     * @param id The bus ID
+     * @param busDetails The updated bus details
      * @return The updated bus
      */
-    Bus updateBus(Long id, BusDTO busDTO);
+    Bus updateBus(Long id, Bus busDetails);
     
     /**
-     * Updates the status of a bus.
-     * 
-     * @param busId ID of the bus
-     * @param status New status
+     * Delete a bus
+     * @param id The bus ID
+     */
+    void deleteBus(Long id);
+    
+    /**
+     * Find buses by status
+     * @param status The bus status
+     * @return List of buses with the given status
+     */
+    List<Bus> findBusesByStatus(Bus.BusStatus status);
+    
+    /**
+     * Count buses by status
+     * @param status The bus status
+     * @return Count of buses with the given status
+     */
+    long countBusesByStatus(Bus.BusStatus status);
+    
+    /**
+     * Find buses by bus type
+     * @param busType The bus type
+     * @return List of buses of the given type
+     */
+    List<Bus> findBusesByType(Bus.BusType busType);
+    
+    /**
+     * Change the status of a bus
+     * @param id The bus ID
+     * @param status The new status
      * @return The updated bus
      */
-    Bus updateBusStatus(Long busId, String status);
-    
-    /**
-     * Deletes a bus.
-     * 
-     * @param busId ID of the bus to delete
-     */
-    void deleteBus(Long busId);
-    
-    /**
-     * Validates a bus to ensure it meets all business rules.
-     * 
-     * @param bus The bus to validate
-     * @return true if the bus is valid, false otherwise
-     */
-    boolean validateBus(Bus bus);
-    
-    /**
-     * Finds all buses that need maintenance.
-     * 
-     * @return List of buses
-     */
-    List<Bus> findBusesNeedingMaintenance();
-    
-    /**
-     * Counts the total number of buses.
-     * 
-     * @return Total number of buses
-     */
-    long countAllBuses();
-    
-    /**
-     * Counts the number of buses with a specific status.
-     * 
-     * @param status Status of the buses
-     * @return Number of buses
-     */
-    long countBusesByStatus(String status);
+    Bus changeBusStatus(Long id, Bus.BusStatus status);
 }

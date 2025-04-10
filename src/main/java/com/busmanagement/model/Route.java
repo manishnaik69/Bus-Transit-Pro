@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String routeName;
 
     @ManyToOne
@@ -41,7 +40,7 @@ public class Route {
     private Integer estimatedDuration; // in minutes
     
     @NotNull
-    private Double fareAmount; // in currency units
+    private Double fareAmount; // in rupees
 
     @ElementCollection
     @CollectionTable(name = "route_stops", joinColumns = @JoinColumn(name = "route_id"))

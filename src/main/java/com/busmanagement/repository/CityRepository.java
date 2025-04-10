@@ -2,65 +2,41 @@ package com.busmanagement.repository;
 
 import com.busmanagement.model.City;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Repository interface for City entities.
- * Provides methods to interact with the cities table in the database.
+ * Repository for City entity
  */
 @Repository
 public interface CityRepository extends JpaRepository<City, Long> {
     
     /**
-     * Finds a city by its name.
-     * 
-     * @param name Name of the city
-     * @return Optional containing the city, if found
+     * Find a city by its name
+     * @param name The city name
+     * @return The city if found
      */
-    Optional<City> findByName(String name);
+    City findByName(String name);
     
     /**
-     * Finds all cities in a specific state.
-     * 
-     * @param state State name
-     * @return List of cities
+     * Find cities by state
+     * @param state The state name
+     * @return List of cities in the given state
      */
     List<City> findByState(String state);
     
     /**
-     * Finds all cities with names containing the given string.
-     * 
-     * @param name Name pattern to search for
-     * @return List of cities
+     * Find cities by containing the given text in their name
+     * @param nameKeyword The keyword to search for in city names
+     * @return List of cities whose names contain the given keyword
      */
-    List<City> findByNameContainingIgnoreCase(String name);
+    List<City> findByNameContainingIgnoreCase(String nameKeyword);
     
     /**
-     * Finds all cities that are sources for at least one route.
-     * 
-     * @return List of source cities
+     * Check if a city exists with the given name
+     * @param name The city name
+     * @return True if a city exists with the given name, false otherwise
      */
-    @Query("SELECT DISTINCT c FROM City c JOIN c.sourcesRoutes r")
-    List<City> findAllSourceCities();
-    
-    /**
-     * Finds all cities that are destinations for at least one route.
-     * 
-     * @return List of destination cities
-     */
-    @Query("SELECT DISTINCT c FROM City c JOIN c.destinationRoutes r")
-    List<City> findAllDestinationCities();
-    
-    /**
-     * Finds possible destination cities from a given source city.
-     * 
-     * @param sourceId ID of the source city
-     * @return List of possible destination cities
-     */
-    @Query("SELECT c FROM City c JOIN Route r ON c.id = r.destination.id WHERE r.source.id = ?1")
-    List<City> findDestinationCitiesFromSource(Long sourceId);
+    boolean existsByName(String name);
 }

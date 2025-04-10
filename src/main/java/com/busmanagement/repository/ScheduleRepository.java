@@ -1,109 +1,128 @@
 package com.busmanagement.repository;
 
+import com.busmanagement.model.Bus;
+import com.busmanagement.model.Route;
 import com.busmanagement.model.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Repository interface for Schedule entities.
- * Provides methods to interact with the schedules table in the database.
+ * Repository for Schedule entity
  */
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     
     /**
-     * Finds all schedules for a specific route.
-     * 
-     * @param routeId ID of the route
-     * @return List of schedules
+     * Find a schedule by its code
+     * @param scheduleCode The schedule code
+     * @return The schedule if found
+     */
+    Schedule findByScheduleCode(String scheduleCode);
+    
+    /**
+     * Find schedules by route
+     * @param route The route
+     * @return List of schedules for the given route
+     */
+    List<Schedule> findByRoute(Route route);
+    
+    /**
+     * Find schedules by route ID
+     * @param routeId The route ID
+     * @return List of schedules for the route with the given ID
      */
     List<Schedule> findByRouteId(Long routeId);
     
     /**
-     * Finds all schedules for a specific bus.
-     * 
-     * @param busId ID of the bus
-     * @return List of schedules
+     * Find schedules by bus
+     * @param bus The bus
+     * @return List of schedules for the given bus
+     */
+    List<Schedule> findByBus(Bus bus);
+    
+    /**
+     * Find schedules by bus ID
+     * @param busId The bus ID
+     * @return List of schedules for the bus with the given ID
      */
     List<Schedule> findByBusId(Long busId);
     
     /**
-     * Finds all schedules for a specific driver.
-     * 
-     * @param driverId ID of the driver
-     * @return List of schedules
+     * Find schedules by departure date
+     * @param departureDate The departure date
+     * @return List of schedules for the given departure date
      */
-    List<Schedule> findByDriverId(Long driverId);
+    List<Schedule> findByDepartureDate(LocalDate departureDate);
     
     /**
-     * Finds all schedules with a specific status.
-     * 
-     * @param status Status of the schedules
-     * @return List of schedules
+     * Find schedules by active status
+     * @param isActive The active status
+     * @return List of active/inactive schedules
      */
-    List<Schedule> findByStatus(String status);
+    List<Schedule> findByIsActive(boolean isActive);
     
     /**
-     * Finds all schedules with departure time after a specific time.
-     * 
-     * @param departureTime Minimum departure time
-     * @return List of schedules
+     * Find schedules by departure date and active status
+     * @param departureDate The departure date
+     * @param isActive The active status
+     * @return List of active/inactive schedules for the given departure date
      */
-    List<Schedule> findByDepartureTimeAfter(LocalTime departureTime);
+    List<Schedule> findByDepartureDateAndIsActive(LocalDate departureDate, boolean isActive);
     
     /**
-     * Finds all schedules for a specific route and date.
-     * 
-     * @param routeId ID of the route
-     * @param date Date of departure
-     * @return List of schedules
+     * Find schedules by available seats greater than the given value
+     * @param minSeats The minimum number of available seats
+     * @return List of schedules with available seats > the given value
      */
-    @Query("SELECT s FROM Schedule s WHERE s.route.id = :routeId AND s.departureDate = :date")
-    List<Schedule> findByRouteIdAndDepartureDate(@Param("routeId") Long routeId, @Param("date") LocalDate date);
+    List<Schedule> findByAvailableSeatsGreaterThanEqual(int minSeats);
     
     /**
-     * Finds all schedules between specific source and destination cities on a specific date.
-     * 
-     * @param sourceId ID of the source city
-     * @param destinationId ID of the destination city
-     * @param date Date of departure
-     * @return List of schedules
+     * Find schedules for a specific departure date and route
+     * @param departureDate The departure date
+     * @param routeId The route ID
+     * @return List of schedules for the given departure date and route
      */
-    @Query("SELECT s FROM Schedule s JOIN s.route r WHERE r.source.id = :sourceId AND r.destination.id = :destinationId AND s.departureDate = :date AND s.status != 'Cancelled'")
-    List<Schedule> findBySourceAndDestinationAndDate(@Param("sourceId") Long sourceId, @Param("destinationId") Long destinationId, @Param("date") LocalDate date);
+    List<Schedule> findByDepartureDateAndRouteId(LocalDate departureDate, Long routeId);
     
     /**
-     * Finds the current schedule for a specific driver.
-     * 
-     * @param driverId ID of the driver
-     * @return List of schedules
+     * Find schedules between departure date range
+     * @param startDate The start date (inclusive)
+     * @param endDate The end date (inclusive)
+     * @return List of schedules between the given dates
      */
-    @Query("SELECT s FROM Schedule s WHERE s.driver.id = :driverId")
-    List<Schedule> findCurrentScheduleForDriver(@Param("driverId") Long driverId);
+    List<Schedule> findByDepartureDateBetween(LocalDate startDate, LocalDate endDate);
     
     /**
-     * Finds all schedules with available seats.
-     * 
-     * @param minSeats Minimum number of available seats
-     * @return List of schedules
+     * Find schedules between departure time range for a specific date
+     * @param departureDate The departure date
+     * @param startTime The start time (inclusive)
+     * @param endTime The end time (inclusive)
+     * @return List of schedules between the given times on the given date
      */
-    @Query("SELECT s FROM Schedule s WHERE s.availableSeats >= :minSeats")
-    List<Schedule> findWithAvailableSeats(@Param("minSeats") int minSeats);
+    List<Schedule> findByDepartureDateAndDepartureTimeBetween(LocalDate departureDate, LocalTime startTime, LocalTime endTime);
     
     /**
-     * Calculates the occupancy rate for each schedule within a specific time range.
-     * 
-     * @param startTime Start of the time range
-     * @param endTime End of the time range
-     * @return List of schedules with occupancy rates
+     * Find schedules by operating days
+     * @param dayOfWeek The day of week
+     * @return List of schedules operating on the given day
      */
-    @Query("SELECT s, (1 - (s.availableSeats * 1.0 / s.bus.capacity)) as occupancyRate FROM Schedule s WHERE s.departureTime BETWEEN :startTime AND :endTime ORDER BY occupancyRate DESC")
-    List<Object[]> getScheduleOccupancyRates(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
+    @Query("SELECT s FROM Schedule s JOIN s.operatingDays d WHERE d = :dayOfWeek")
+    List<Schedule> findByOperatingDay(@Param("dayOfWeek") DayOfWeek dayOfWeek);
+    
+    /**
+     * Find schedules for a specific route and date range
+     * @param routeId The route ID
+     * @param startDate The start date (inclusive)
+     * @param endDate The end date (inclusive)
+     * @return List of schedules for the given route and date range
+     */
+    List<Schedule> findByRouteIdAndDepartureDateBetween(Long routeId, LocalDate startDate, LocalDate endDate);
 }
