@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Schedule Maintenance</title>
+</head>
+<body>
+    <nav th:replace="layout/main :: nav"></nav>
+    
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0" th:text="${isNew ? 'Schedule New Maintenance' : 'Edit Maintenance'}">Schedule New Maintenance</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/maintenance/save}" th:object="${maintenance}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    
+                    <div class="mb-3 row">
+                        <label for="bus" class="col-sm-3 col-form-label">Bus:</label>
+                        <div class="col-sm-9">
+                            <select id="bus" name="bus" class="form-select" required>
+                                <option value="">-- Select Bus --</option>
+                                <option th:each="bus : ${buses}" 
+                                        th:value="${bus.id}" 
+                                        th:text="${bus.registrationNumber + ' - ' + bus.manufacturer + ' ' + bus.model}"
+                                        th:selected="${maintenance.bus != null && bus.id == maintenance.bus.id}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="maintenanceType" class="col-sm-3 col-form-label">Maintenance Type:</label>
+                        <div class="col-sm-9">
+                            <select id="maintenanceType" th:field="*{maintenanceType}" class="form-select" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="Oil Change">Oil Change</option>
+                                <option value="Tire Rotation">Tire Rotation</option>
+                                <option value="Brake Service">Brake Service</option>
+                                <option value="Engine Repair">Engine Repair</option>
+                                <option value="Transmission Service">Transmission Service</option>
+                                <option value="Electrical System">Electrical System</option>
+                                <option value="Cooling System">Cooling System</option>
+                                <option value="Exhaust System">Exhaust System</option>
+                                <option value="Routine Inspection">Routine Inspection</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="description" class="col-sm-3 col-form-label">Description:</label>
+                        <div class="col-sm-9">
+                            <textarea id="description" th:field="*{description}" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="scheduledDateString" class="col-sm-3 col-form-label">Scheduled Date:</label>
+                        <div class="col-sm-9">
+                            <input type="datetime-local" id="scheduledDateString" name="scheduledDateString" 
+                                   th:value="${maintenance.scheduledDate != null ? #temporals.format(maintenance.scheduledDate, 'yyyy-MM-dd''T''HH:mm') : ''}" 
+                                   class="form-control" required />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="technicianName" class="col-sm-3 col-form-label">Technician Name:</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="technicianName" th:field="*{technicianName}" class="form-control" required />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="cost" class="col-sm-3 col-form-label">Estimated Cost (₹):</label>
+                        <div class="col-sm-9">
+                            <input type="number" id="cost" th:field="*{cost}" class="form-control" min="0" step="0.01" />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="notes" class="col-sm-3 col-form-label">Notes:</label>
+                        <div class="col-sm-9">
+                            <textarea id="notes" th:field="*{notes}" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <label for="status" class="col-sm-3 col-form-label">Status:</label>
+                        <div class="col-sm-9">
+                            <select id="status" th:field="*{status}" class="form-select" required>
+                                <option value="SCHEDULED">Scheduled</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="CANCELLED">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-save"></i> Save
+                            </button>
+                            <a th:href="@{/maintenance}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const scheduledDateInput = document.getElementById('scheduledDateString');
+            
+            form.addEventListener('submit', function(e) {
+                const scheduledDate = new Date(scheduledDateInput.value);
+                const now = new Date();
+                
+                if (document.getElementById('status').value === 'SCHEDULED' && scheduledDate < now) {
+                    if (!confirm('The scheduled date is in the past. Are you sure you want to continue?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
