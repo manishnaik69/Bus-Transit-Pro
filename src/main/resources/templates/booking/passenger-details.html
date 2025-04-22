@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Passenger Details - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Passenger Details</h4>
+                        <a href="javascript:history.back()" class="btn btn-sm btn-outline-light">
+                            <i class="bi bi-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- Journey details -->
+                        <div class="alert alert-light mb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="text-primary mb-2" th:text="${schedule.route.source.name + ' to ' + schedule.route.destination.name}"></h5>
+                                    <p class="mb-0">
+                                        <strong>Date:</strong> <span th:text="${#temporals.format(schedule.departureTime, 'EEE, d MMM yyyy')}"></span>
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Time:</strong> <span th:text="${#temporals.format(schedule.departureTime, 'HH:mm')}"></span>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-0">
+                                        <strong>Bus:</strong> <span th:text="${schedule.bus.manufacturer + ' ' + schedule.bus.model}"></span>
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Seat No:</strong> <span th:text="${ticket.seatNumber}"></span>
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Fare:</strong> <span th:text="${'₹' + ticket.fare}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Passenger form -->
+                        <form th:action="@{/booking/payment}" th:object="${ticket}" method="post">
+                            <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
+                            <input type="hidden" th:field="*{seatNumber}" />
+                            <input type="hidden" th:field="*{fare}" />
+                            
+                            <div class="mb-3">
+                                <label for="passengerName" class="form-label">Full Name</label>
+                                <input type="text" id="passengerName" th:field="*{passengerName}" 
+                                       class="form-control" required />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="passengerEmail" class="form-label">Email Address</label>
+                                <input type="email" id="passengerEmail" th:field="*{passengerEmail}" 
+                                       class="form-control" required />
+                                <small class="text-muted">Your ticket will be sent to this email address</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="passengerPhone" class="form-label">Phone Number</label>
+                                <input type="tel" id="passengerPhone" th:field="*{passengerPhone}" 
+                                       class="form-control" required />
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Proceed to Payment <i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

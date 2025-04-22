@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Search Results - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Available Buses</h2>
+                    <a href="/booking/search" class="btn btn-outline-primary">
+                        <i class="bi bi-search me-2"></i> New Search
+                    </a>
+                </div>
+                
+                <!-- Search info -->
+                <div class="alert alert-info mb-4" th:if="${travelDate != null}">
+                    <p class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Available buses for <strong th:text="${#temporals.format(travelDate, 'EEE, dd MMM yyyy')}"></strong>
+                    </p>
+                </div>
+                
+                <!-- No schedules found -->
+                <div class="alert alert-light text-center py-5" th:if="${#lists.isEmpty(schedules)}">
+                    <i class="bi bi-emoji-frown fs-1 text-muted mb-3"></i>
+                    <h4>No Buses Available</h4>
+                    <p class="mb-4">We couldn't find any buses for your selected route and date.</p>
+                    <a href="/booking/search" class="btn btn-primary">Try Another Search</a>
+                </div>
+                
+                <!-- Schedules list -->
+                <div class="row" th:unless="${#lists.isEmpty(schedules)}">
+                    <div class="col-12 mb-4" th:each="schedule : ${schedules}">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Bus Info -->
+                                    <div class="col-md-8">
+                                        <!-- Add null checks for each object -->
+                                        <h5 class="mb-1">
+                                            <span th:if="${schedule != null && schedule.route != null && schedule.route.source != null}" 
+                                                  th:text="${schedule.route.source.name}">Source</span>
+                                            <span th:unless="${schedule != null && schedule.route != null && schedule.route.source != null}">Unknown</span>
+                                            <i class="bi bi-arrow-right mx-2"></i>
+                                            <span th:if="${schedule != null && schedule.route != null && schedule.route.destination != null}" 
+                                                  th:text="${schedule.route.destination.name}">Destination</span>
+                                            <span th:unless="${schedule != null && schedule.route != null && schedule.route.destination != null}">Unknown</span>
+                                        </h5>
+                                        
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-clock me-2 text-muted"></i>
+                                            <span th:if="${schedule != null && schedule.departureTime != null}"
+                                                  th:text="${#temporals.format(schedule.departureTime, 'HH:mm')}">08:00</span>
+                                            <span th:unless="${schedule != null && schedule.departureTime != null}">--:--</span>
+                                            <i class="bi bi-dash mx-2"></i>
+                                            <span th:if="${schedule != null && schedule.arrivalTime != null}"
+                                                  th:text="${#temporals.format(schedule.arrivalTime, 'HH:mm')}">14:00</span>
+                                            <span th:unless="${schedule != null && schedule.arrivalTime != null}">--:--</span>
+                                            <span class="ms-3 text-muted">
+                                                (
+                                                <span th:if="${schedule != null && schedule.estimatedTravelTime != null}" 
+                                                      th:text="${schedule.estimatedTravelTime}">6</span>
+                                                <span th:unless="${schedule != null && schedule.estimatedTravelTime != null}">?</span>
+                                                hours)
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="mb-2">
+                                            <strong>Bus:</strong> 
+                                            <span th:if="${schedule != null && schedule.bus != null}" 
+                                                  th:text="${schedule.bus.manufacturer + ' ' + schedule.bus.model}">Volvo 9400</span>
+                                            <span th:unless="${schedule != null && schedule.bus != null}">Unknown</span>
+                                        </p>
+                                        
+                                        <p class="mb-2">
+                                            <strong>Available Seats:</strong> 
+                                            <span th:if="${schedule != null}" 
+                                                  th:text="${schedule.availableSeats}">45</span>
+                                            <span th:unless="${schedule != null}">0</span>
+                                        </p>
+                                        
+                                        <div class="d-flex align-items-center mt-3">
+                                            <span class="badge bg-success me-2">
+                                                <i class="bi bi-star-fill me-1"></i>
+                                                <span th:if="${schedule != null && schedule.route != null}" 
+                                                      th:text="${#numbers.formatDecimal(schedule.route.rating, 1, 1)}">4.5</span>
+                                                <span th:unless="${schedule != null && schedule.route != null}">0.0</span>
+                                            </span>
+                                            <span class="text-muted small">Amenities: WiFi, USB, AC</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Pricing and Booking -->
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-column justify-content-between">
+                                        <div class="mb-3 mb-md-0">
+                                            <span class="d-block text-muted small">Fare from</span>
+                                            <span class="fs-4 fw-bold text-success" th:if="${schedule != null && schedule.route != null}">
+                                                ₹<span th:text="${schedule.route.fareAmount}">750</span>
+                                            </span>
+                                            <span class="fs-4 fw-bold text-success" th:unless="${schedule != null && schedule.route != null}">
+                                                ₹0
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <a th:if="${schedule != null}" 
+                                               th:href="@{/booking/select-seat/{id}(id=${schedule.id})}" 
+                                               class="btn btn-primary">
+                                                View Seats
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

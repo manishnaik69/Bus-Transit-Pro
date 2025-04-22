@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>My Bookings - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">My Bookings</h2>
+                    <a href="/booking/search" class="btn btn-outline-primary">
+                        <i class="bi bi-plus-lg me-2"></i> Book New Ticket
+                    </a>
+                </div>
+                
+                <!-- Alert messages -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                
+                <!-- Email info -->
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Showing all bookings for <strong th:text="${email}"></strong>
+                </div>
+                
+                <!-- No tickets message -->
+                <div th:if="${#lists.isEmpty(tickets)}" class="alert alert-light text-center py-5">
+                    <i class="bi bi-ticket-perforated-fill fs-1 text-muted mb-3"></i>
+                    <h4>No Bookings Found</h4>
+                    <p class="mb-4">You haven't made any bookings with this email address yet.</p>
+                    <a href="/booking/search" class="btn btn-primary">Book Your First Trip</a>
+                </div>
+                
+                <!-- Tickets list -->
+                <div class="row" th:unless="${#lists.isEmpty(tickets)}">
+                    <!-- Upcoming Trips -->
+                    <div class="col-12 mb-4">
+                        <h4 class="mb-3">Upcoming Trips</h4>
+                        <div class="card mb-3" th:each="ticket : ${tickets}" 
+                             th:if="${!ticket.cancelled && ticket.schedule.departureTime.isAfter(T(java.time.LocalDateTime).now())}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="badge bg-success mb-2">UPCOMING</span>
+                                        <h5 class="mb-1" th:text="${ticket.schedule.route.source.name + ' → ' + ticket.schedule.route.destination.name}"></h5>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-calendar-event me-2 text-muted"></i>
+                                            <span th:text="${#temporals.format(ticket.schedule.departureTime, 'EEE, d MMM yyyy')}"></span>
+                                            <i class="bi bi-clock ms-3 me-2 text-muted"></i>
+                                            <span th:text="${#temporals.format(ticket.schedule.departureTime, 'HH:mm')}"></span>
+                                        </div>
+                                        <p class="mb-1">
+                                            <strong>Bus:</strong> <span th:text="${ticket.schedule.bus.manufacturer + ' ' + ticket.schedule.bus.model}"></span>
+                                        </p>
+                                        <p class="mb-1">
+                                            <strong>Seat:</strong> <span th:text="${ticket.seatNumber}"></span>
+                                        </p>
+                                        <p class="mb-0">
+                                            <strong>Booking ID:</strong> <span th:text="${ticket.bookingReference}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-column justify-content-between">
+                                        <div class="mb-3 mb-md-0">
+                                            <span class="d-block text-muted small">Amount Paid</span>
+                                            <span class="fs-5 fw-bold text-success" th:text="${'₹' + ticket.fare}"></span>
+                                        </div>
+                                        <div>
+                                            <a th:href="@{/booking/ticket/{id}(id=${ticket.id})}" class="btn btn-primary">
+                                                View Ticket
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div th:if="${#lists.isEmpty(tickets.?[!cancelled && schedule.departureTime.isAfter(T(java.time.LocalDateTime).now())])}" 
+                             class="alert alert-light text-center py-4">
+                            <p class="mb-0">You don't have any upcoming trips.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Past Trips -->
+                    <div class="col-12 mb-4">
+                        <h4 class="mb-3">Past Trips</h4>
+                        <div class="card mb-3" th:each="ticket : ${tickets}" 
+                             th:if="${!ticket.cancelled && ticket.schedule.departureTime.isBefore(T(java.time.LocalDateTime).now())}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="badge bg-secondary mb-2">COMPLETED</span>
+                                        <h5 class="mb-1" th:text="${ticket.schedule.route.source.name + ' → ' + ticket.schedule.route.destination.name}"></h5>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-calendar-event me-2 text-muted"></i>
+                                            <span th:text="${#temporals.format(ticket.schedule.departureTime, 'EEE, d MMM yyyy')}"></span>
+                                            <i class="bi bi-clock ms-3 me-2 text-muted"></i>
+                                            <span th:text="${#temporals.format(ticket.schedule.departureTime, 'HH:mm')}"></span>
+                                        </div>
+                                        <p class="mb-1">
+                                            <strong>Booking ID:</strong> <span th:text="${ticket.bookingReference}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-column justify-content-between">
+                                        <div class="mb-3 mb-md-0">
+                                            <span class="d-block text-muted small">Amount Paid</span>
+                                            <span class="fs-5 fw-bold" th:text="${'₹' + ticket.fare}"></span>
+                                        </div>
+                                        <div>
+                                            <a th:href="@{/booking/ticket/{id}(id=${ticket.id})}" class="btn btn-outline-secondary">
+                                                View Receipt
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div th:if="${#lists.isEmpty(tickets.?[!cancelled && schedule.departureTime.isBefore(T(java.time.LocalDateTime).now())])}" 
+                             class="alert alert-light text-center py-4">
+                            <p class="mb-0">You don't have any past trips.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Cancelled Trips -->
+                    <div class="col-12 mb-4" th:if="${!#lists.isEmpty(tickets.?[cancelled])}">
+                        <h4 class="mb-3">Cancelled Trips</h4>
+                        <div class="card mb-3" th:each="ticket : ${tickets}" th:if="${ticket.cancelled}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="badge bg-danger mb-2">CANCELLED</span>
+                                        <h5 class="mb-1" th:text="${ticket.schedule.route.source.name + ' → ' + ticket.schedule.route.destination.name}"></h5>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="bi bi-calendar-event me-2 text-muted"></i>
+                                            <span th:text="${#temporals.format(ticket.schedule.departureTime, 'EEE, d MMM yyyy')}"></span>
+                                            <i class="bi bi-clock ms-3 me-2 text-muted"></i>
+                                            <span th:text="${#temporals.format(ticket.schedule.departureTime, 'HH:mm')}"></span>
+                                        </div>
+                                        <p class="mb-1">
+                                            <strong>Cancelled On:</strong> <span th:text="${ticket.formattedCancelTime}"></span>
+                                        </p>
+                                        <p class="mb-0">
+                                            <strong>Booking ID:</strong> <span th:text="${ticket.bookingReference}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                        <div>
+                                            <span class="d-block text-muted small">Refund Status</span>
+                                            <span class="text-warning">Processing</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

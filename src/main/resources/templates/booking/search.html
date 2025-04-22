@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Search Buses - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Find Your Bus</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Alert messages -->
+                        <div th:if="${param.error}" class="alert alert-danger">
+                            <span th:text="${param.error}"></span>
+                        </div>
+                        
+                        <form action="/booking/results" method="get">
+                            <div class="row">
+                                <!-- Source City -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="sourceId" class="form-label">From</label>
+                                    <select id="sourceId" name="sourceId" class="form-select" required>
+                                        <option value="">-- Select Source City --</option>
+                                        <option th:each="city : ${cities}" 
+                                                th:value="${city.id}" 
+                                                th:text="${city.name + ', ' + city.state}">
+                                        </option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Destination City -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="destinationId" class="form-label">To</label>
+                                    <select id="destinationId" name="destinationId" class="form-select" required>
+                                        <option value="">-- Select Destination City --</option>
+                                        <option th:each="city : ${cities}" 
+                                                th:value="${city.id}" 
+                                                th:text="${city.name + ', ' + city.state}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Travel Date -->
+                            <div class="mb-4">
+                                <label for="travelDate" class="form-label">Travel Date</label>
+                                <input type="date" id="travelDate" name="travelDate" 
+                                       class="form-control" 
+                                       min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required />
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-search me-2"></i> Search Buses
+                            </button>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="/booking/find-ticket" class="btn btn-outline-secondary">
+                                <i class="bi bi-ticket-perforated me-2"></i> Find My Ticket
+                            </a>
+                            <a href="/booking/my-bookings?email=" class="btn btn-outline-secondary">
+                                <i class="bi bi-person me-2"></i> My Bookings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('travelDate').min = today;
+            document.getElementById('travelDate').value = today;
+            
+            // Validate source and destination are different
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const source = document.getElementById('sourceId').value;
+                const destination = document.getElementById('destinationId').value;
+                
+                if (source === destination) {
+                    e.preventDefault();
+                    alert('Source and destination cities cannot be the same.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

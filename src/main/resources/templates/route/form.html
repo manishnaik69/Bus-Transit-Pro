@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Add/Edit Route - BusTransitPro</title>
+</head>
+<body>
+    <nav th:replace="layout/main :: nav"></nav>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0" th:text="${isNew ? 'Add New Route' : 'Edit Route'}">Add/Edit Route</h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/routes/save}" th:object="${route}" method="post">
+                            <!-- Hidden ID for edit mode -->
+                            <input type="hidden" th:field="*{id}" />
+                            
+                            <!-- Source City -->
+                            <div class="mb-3">
+                                <label for="source" class="form-label">Source City</label>
+                                <select id="source" name="source" class="form-select" required>
+                                    <option value="">-- Select Source City --</option>
+                                    <option th:each="city : ${cities}" 
+                                            th:value="${city.id}" 
+                                            th:text="${city.name + ', ' + city.state}"
+                                            th:selected="${!isNew && route.source != null && city.id == route.source.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <!-- Destination City -->
+                            <div class="mb-3">
+                                <label for="destination" class="form-label">Destination City</label>
+                                <select id="destination" name="destination" class="form-select" required>
+                                    <option value="">-- Select Destination City --</option>
+                                    <option th:each="city : ${cities}" 
+                                            th:value="${city.id}" 
+                                            th:text="${city.name + ', ' + city.state}"
+                                            th:selected="${!isNew && route.destination != null && city.id == route.destination.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <!-- Distance -->
+                            <div class="mb-3">
+                                <label for="distance" class="form-label">Distance (km)</label>
+                                <input type="number" id="distance" th:field="*{distance}" 
+                                       class="form-control" min="1" required />
+                            </div>
+                            
+                            <!-- Duration -->
+                            <div class="mb-3">
+                                <label for="duration" class="form-label">Duration (minutes)</label>
+                                <input type="number" id="duration" th:field="*{duration}" 
+                                       class="form-control" min="1" required />
+                            </div>
+                            
+                            <!-- Fare Amount -->
+                            <div class="mb-3">
+                                <label for="fareAmount" class="form-label">Fare Amount (₹)</label>
+                                <input type="number" id="fareAmount" th:field="*{fareAmount}" 
+                                       class="form-control" min="0" step="0.01" required />
+                            </div>
+                            
+                            <!-- Form buttons -->
+                            <div class="d-flex">
+                                <a th:href="@{/routes}" class="btn btn-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Route</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validate source and destination are different
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const source = document.getElementById('source').value;
+                const destination = document.getElementById('destination').value;
+                
+                if (source === destination) {
+                    e.preventDefault();
+                    alert('Source and destination cities cannot be the same.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

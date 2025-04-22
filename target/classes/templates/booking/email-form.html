@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>My Bookings - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Find Your Bookings</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Alert messages -->
+                        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show">
+                            <span th:text="${param.error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        
+                        <p class="mb-4">Enter the email address you used during booking to see all your trips.</p>
+                        
+                        <form th:action="@{/booking/my-bookings}" method="get">
+                            <div class="mb-4">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" id="email" name="email" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Enter your email" required />
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-search me-2"></i> Find My Bookings
+                            </button>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="/booking/search" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> Back to Search
+                            </a>
+                            <a href="/booking/find-ticket" class="btn btn-outline-secondary">
+                                <i class="bi bi-ticket-perforated me-2"></i> Find a Specific Ticket
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Payment - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="card-title mb-0">Payment Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Booking Summary -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">Booking Summary</h5>
+                            <div class="border rounded p-3">
+                                <div class="row mb-2">
+                                    <div class="col-md-3 fw-bold">From - To:</div>
+                                    <div class="col-md-9" th:if="${booking != null && booking.schedule != null && booking.schedule.route != null}">
+                                        <span th:text="${booking.schedule.route.source.name}">Delhi</span> to 
+                                        <span th:text="${booking.schedule.route.destination.name}">Mumbai</span>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-3 fw-bold">Travel Date:</div>
+                                    <div class="col-md-9" th:if="${booking != null && booking.schedule != null}">
+                                        <span th:text="${#temporals.format(booking.schedule.departureTime, 'EEE, d MMM yyyy')}">Mon, 22 Apr 2025</span>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-3 fw-bold">Departure:</div>
+                                    <div class="col-md-9" th:if="${booking != null && booking.schedule != null}">
+                                        <span th:text="${#temporals.format(booking.schedule.departureTime, 'HH:mm')}">08:30</span>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-3 fw-bold">Passenger:</div>
+                                    <div class="col-md-9" th:text="${booking.passengerName}">John Doe</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 fw-bold">Seat Number:</div>
+                                    <div class="col-md-9">
+                                        <span class="badge bg-primary" th:text="${seatNumber}">12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Form -->
+                        <form th:action="@{/booking/confirm}" method="post">
+                            <h5 class="mb-3">Payment Method</h5>
+                            
+                            <!-- Hidden fields to carry forward data -->
+                            <input type="hidden" name="scheduleId" th:value="${scheduleId}" />
+                            <input type="hidden" name="seatNumber" th:value="${seatNumber}" />
+                            <input type="hidden" name="fare" th:value="${fare}" />
+                            
+                            <!-- Passenger details -->
+                            <input type="hidden" name="passengerName" th:value="${booking.passengerName}" />
+                            <input type="hidden" name="passengerEmail" th:value="${booking.passengerEmail}" />
+                            <input type="hidden" name="passengerPhone" th:value="${booking.passengerPhone}" />
+                            
+                            <div class="mb-4">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="CREDIT_CARD" checked>
+                                    <label class="form-check-label" for="creditCard">
+                                        <i class="bi bi-credit-card me-2"></i> Credit/Debit Card
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="upi" value="UPI">
+                                    <label class="form-check-label" for="upi">
+                                        <i class="bi bi-phone me-2"></i> UPI
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="netBanking" value="NET_BANKING">
+                                    <label class="form-check-label" for="netBanking">
+                                        <i class="bi bi-bank me-2"></i> Net Banking
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Amount to Pay -->
+                            <div class="p-3 bg-light rounded mb-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">Total Amount</h6>
+                                        <small class="text-muted">Including all taxes</small>
+                                    </div>
+                                    <div>
+                                        <span class="fs-4 fw-bold text-success" th:text="${'₹' + fare}">₹750</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-lock-fill me-2"></i> Pay Now
+                                </button>
+                                <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i> Back
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

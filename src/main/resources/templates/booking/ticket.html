@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Your Ticket - BusTransitPro</title>
+    <style>
+        .ticket-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .ticket-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px dashed #ddd;
+        }
+        .ticket-info-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        .ticket-info-value {
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        .dotted-line {
+            border-bottom: 1px dashed #ddd;
+            margin: 15px 0;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .ticket-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <!-- Success/Error messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4 no-print">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4 no-print">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <!-- Ticket Actions -->
+                <div class="d-flex justify-content-between mb-3 no-print">
+                    <a href="/booking/find-ticket" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back
+                    </a>
+                    <div>
+                        <button onclick="window.print()" class="btn btn-outline-secondary me-2">
+                            <i class="bi bi-printer me-1"></i> Print Ticket
+                        </button>
+                        <a th:if="${!ticket.cancelled}" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-outline-danger">
+                            <i class="bi bi-x-circle me-1"></i> Cancel Ticket
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Status Bar -->
+                <div th:class="${'alert ' + (ticket.cancelled ? 'alert-danger' : 'alert-success')} + ' d-flex justify-content-between align-items-center mb-4'">
+                    <span>
+                        <i th:class="${'bi ' + (ticket.cancelled ? 'bi-x-circle-fill' : 'bi-check-circle-fill')} + ' me-2'"></i>
+                        <strong th:text="${ticket.cancelled ? 'CANCELLED' : 'CONFIRMED'}"></strong>
+                    </span>
+                    <span class="badge bg-light text-dark" th:text="${'Booking ID: ' + ticket.bookingReference}"></span>
+                </div>
+                
+                <!-- Ticket -->
+                <div class="ticket-container mb-4">
+                    <div class="ticket-header text-center p-4">
+                        <div class="mb-2">
+                            <i class="bi bi-ticket-perforated fs-1"></i>
+                        </div>
+                        <h4 class="mb-1">Bus Ticket</h4>
+                        <p class="mb-0" th:text="${ticket.schedule.route.source.name + ' → ' + ticket.schedule.route.destination.name}"></p>
+                        <div class="mt-3 ticket-qr">
+                            <!-- QR code can be generated with an API like Google Charts -->
+                            <img th:src="@{'https://chart.googleapis.com/chart?cht=qr&chl=' + ${ticket.bookingReference} + '&chs=150x150&choe=UTF-8'}" 
+                                 alt="QR Code" class="img-fluid">
+                        </div>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Passenger Name</p>
+                                <p class="ticket-info-value" th:text="${ticket.passengerName}"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Contact</p>
+                                <p class="ticket-info-value" th:text="${ticket.passengerPhone}"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Journey Date</p>
+                                <p class="ticket-info-value" th:text="${#temporals.format(ticket.schedule.departureTime, 'EEE, d MMM yyyy')}"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Travel Time</p>
+                                <p class="ticket-info-value">
+                                    <span th:text="${#temporals.format(ticket.schedule.departureTime, 'HH:mm')}"></span>
+                                    <span> - </span>
+                                    <span th:text="${#temporals.format(ticket.schedule.arrivalTime, 'HH:mm')}"></span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="dotted-line"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Bus Details</p>
+                                <p class="ticket-info-value">
+                                    <span th:text="${ticket.schedule.bus.manufacturer + ' ' + ticket.schedule.bus.model}"></span><br>
+                                    <small class="text-muted" th:text="${'Reg No: ' + ticket.schedule.bus.registrationNumber}"></small>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Seat Number</p>
+                                <p class="ticket-info-value">
+                                    <span class="badge bg-primary fs-5" th:text="${ticket.seatNumber}"></span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Amount Paid</p>
+                                <p class="ticket-info-value">
+                                    <span class="fw-bold" th:text="${'₹' + ticket.fare}"></span>
+                                    <small class="text-success ms-2" th:if="${!ticket.cancelled}">(Paid)</small>
+                                    <small class="text-danger ms-2" th:if="${ticket.cancelled}">(Refund Initiated)</small>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="ticket-info-label">Payment Method</p>
+                                <p class="ticket-info-value" th:text="${ticket.paymentMethod}"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-light mt-3 mb-0">
+                            <small>
+                                <i class="bi bi-info-circle me-2"></i>
+                                Please arrive at the bus station 30 minutes before departure time. Carry a printed copy or show the e-ticket on your mobile device along with a valid ID proof.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Booking Details -->
+                <div class="card mb-4 no-print">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Booking Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Booked On:</strong> <span th:text="${ticket.formattedBookingTime}"></span></p>
+                                <p class="mb-2"><strong>Booking Reference:</strong> <span th:text="${ticket.bookingReference}"></span></p>
+                                <p class="mb-2"><strong>Email:</strong> <span th:text="${ticket.passengerEmail}"></span></p>
+                            </div>
+                            <div class="col-md-6" th:if="${ticket.cancelled}">
+                                <p class="mb-2"><strong>Cancelled On:</strong> <span th:text="${ticket.formattedCancelTime}"></span></p>
+                                <p class="mb-0 text-danger"><strong>Refund Status:</strong> <span>Processing</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Need Help Section -->
+                <div class="card mb-4 no-print">
+                    <div class="card-body">
+                        <h5>Need Help?</h5>
+                        <p class="mb-3">If you have any questions or concerns regarding your booking, please contact our customer support.</p>
+                        <div class="d-flex">
+                            <a href="tel:+918800123456" class="btn btn-outline-secondary me-2">
+                                <i class="bi bi-telephone me-1"></i> Call Support
+                            </a>
+                            <a href="mailto:support@bustransitpro.com" class="btn btn-outline-secondary">
+                                <i class="bi bi-envelope me-1"></i> Email Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cancel Ticket Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Cancel Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Are you sure you want to cancel your ticket?
+                    </div>
+                    <p>Please note the cancellation policy:</p>
+                    <ul>
+                        <li>Cancelled more than 48 hours before departure: 90% refund</li>
+                        <li>Cancelled between 24-48 hours before departure: 75% refund</li>
+                        <li>Cancelled between 12-24 hours before departure: 50% refund</li>
+                        <li>Cancelled less than 12 hours before departure: No refund</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep My Ticket</button>
+                    <form th:action="@{/tickets/cancel/{id}(id=${ticket.id})}" method="post">
+                        <button type="submit" class="btn btn-danger">Cancel Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

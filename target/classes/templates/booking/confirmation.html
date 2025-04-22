@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Booking Confirmation - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <!-- Success message -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <!-- Error message -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Booking Status -->
+                <div th:class="${'alert ' + (booking.cancelled ? 'alert-danger' : 'alert-success')} + ' d-flex justify-content-between align-items-center mb-4'">
+                    <span>
+                        <i th:class="${'bi ' + (booking.cancelled ? 'bi-x-circle-fill' : 'bi-check-circle-fill')} + ' me-2'"></i>
+                        <strong th:text="${booking.cancelled ? 'CANCELLED' : 'CONFIRMED'}"></strong>
+                    </span>
+                    <span class="badge bg-light text-dark" th:text="${'Booking ID: ' + booking.bookingReference}"></span>
+                </div>
+                
+                <!-- Ticket Actions -->
+                <div class="d-flex justify-content-between mb-3 no-print">
+                    <a href="/booking/search" class="btn btn-outline-primary">
+                        <i class="bi bi-search me-1"></i> Book Another Trip
+                    </a>
+                    <div>
+                        <button onclick="window.print()" class="btn btn-outline-secondary me-2">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                        <a th:if="${!booking.cancelled}" data-bs-toggle="modal" data-bs-target="#cancelModal" class="btn btn-outline-danger">
+                            <i class="bi bi-x-circle me-1"></i> Cancel Booking
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Journey Details -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Journey Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>From:</strong> <span th:text="${booking.schedule != null && booking.schedule.route != null ? booking.schedule.route.source.name : 'Unknown'}"></span></p>
+                                <p class="mb-2"><strong>To:</strong> <span th:text="${booking.schedule != null && booking.schedule.route != null ? booking.schedule.route.destination.name : 'Unknown'}"></span></p>
+                                <p class="mb-2">
+                                    <strong>Date:</strong> <span th:text="${booking.schedule != null ? #temporals.format(booking.schedule.departureTime, 'EEE, d MMM yyyy') : 'Unknown'}"></span>
+                                </p>
+                                <p class="mb-0">
+                                    <strong>Time:</strong> <span th:text="${booking.schedule != null ? #temporals.format(booking.schedule.departureTime, 'HH:mm') : 'Unknown'}"></span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Bus:</strong> <span th:text="${booking.schedule != null && booking.schedule.bus != null ? booking.schedule.bus.manufacturer + ' ' + booking.schedule.bus.model : 'Unknown'}"></span></p>
+                                <p class="mb-2"><strong>Registration:</strong> <span th:text="${booking.schedule != null && booking.schedule.bus != null ? booking.schedule.bus.registrationNumber : 'Unknown'}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Passenger Details -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Passenger Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Name:</strong> <span th:text="${booking.passengerName}"></span></p>
+                                <p class="mb-0"><strong>Phone:</strong> <span th:text="${booking.passengerPhone}"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-0"><strong>Email:</strong> <span th:text="${booking.passengerEmail}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ticket Details -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Ticket Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Seat No.</th>
+                                    <th>Passenger</th>
+                                    <th>Status</th>
+                                    <th>Fare</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ticket : ${tickets}">
+                                    <td><span class="badge bg-primary" th:text="${ticket.seatNumber}"></span></td>
+                                    <td th:text="${booking.passengerName}"></td>
+                                    <td>
+                                        <span th:if="${ticket.cancelled}" class="badge bg-danger">Cancelled</span>
+                                        <span th:unless="${ticket.cancelled}" class="badge bg-success">Confirmed</span>
+                                    </td>
+                                    <td th:text="${'₹' + ticket.fare}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Payment Details -->
+                <div class="card mb-4" th:if="${booking.payment != null}">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Payment Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Payment Method:</strong> <span th:text="${booking.payment.paymentMethod}"></span></p>
+                                <p class="mb-2"><strong>Payment ID:</strong> <span th:text="${booking.payment.paymentId}"></span></p>
+                                <p class="mb-0"><strong>Payment Time:</strong> <span th:text="${booking.payment.formattedPaymentTime}"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Amount Paid:</strong> <span th:text="${'₹' + booking.payment.amount}"></span></p>
+                                <div th:if="${booking.payment.refundAmount > 0}">
+                                    <p class="mb-2"><strong>Refund Amount:</strong> <span th:text="${'₹' + booking.payment.refundAmount}"></span></p>
+                                    <p class="mb-0"><strong>Refund Status:</strong> <span th:text="${booking.payment.refundStatus}"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Booking Info -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Booking ID:</strong> <span th:text="${booking.bookingReference}"></span></p>
+                                <p class="mb-0"><strong>Booked On:</strong> <span th:text="${booking.formattedBookingTime}"></span></p>
+                            </div>
+                            <div class="col-md-6" th:if="${booking.cancelled}">
+                                <p class="mb-2"><strong>Cancelled On:</strong> <span th:text="${booking.formattedCancelTime}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cancel Booking Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Cancel Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Are you sure you want to cancel this booking and all associated tickets?
+                    </div>
+                    <p>Please note the cancellation policy:</p>
+                    <ul>
+                        <li>Cancelled more than 48 hours before departure: 90% refund</li>
+                        <li>Cancelled between 24-48 hours before departure: 75% refund</li>
+                        <li>Cancelled between 12-24 hours before departure: 50% refund</li>
+                        <li>Cancelled less than 12 hours before departure: No refund</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My Booking</button>
+                    <form th:action="@{/booking/cancel/{id}(id=${booking.id})}" method="post">
+                        <button type="submit" class="btn btn-danger">Yes, Cancel Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

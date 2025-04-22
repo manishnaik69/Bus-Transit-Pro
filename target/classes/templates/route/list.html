@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Route Management - BusTransitPro</title>
+</head>
+<body>
+    <nav th:replace="layout/main :: nav"></nav>
+    
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Route Management</h2>
+            <a href="/routes/new" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i> Add New Route
+            </a>
+        </div>
+        
+        <!-- Alert messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <!-- Routes table -->
+        <div class="card shadow">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Distance (km)</th>
+                            <th>Duration</th>
+                            <th>Fare (₹)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${routes.empty}">
+                            <td colspan="7" class="text-center">No routes available</td>
+                        </tr>
+                        <tr th:each="route : ${routes}">
+                            <td th:text="${route.id}"></td>
+                            <td th:text="${route.source.name}"></td>
+                            <td th:text="${route.destination.name}"></td>
+                            <td th:text="${route.distance}"></td>
+                            <td th:text="${route.formattedDuration}"></td>
+                            <td th:text="${'₹' + route.fareAmount}"></td>
+                            <td>
+                                <div class="d-flex">
+                                    <a th:href="@{/routes/view/{id}(id=${route.id})}" class="btn btn-sm btn-info me-1">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a th:href="@{/routes/edit/{id}(id=${route.id})}" class="btn btn-sm btn-warning me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a th:href="@{/routes/delete/{id}(id=${route.id})}" 
+                                       onclick="return confirm('Are you sure you want to delete this route?')"
+                                       class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

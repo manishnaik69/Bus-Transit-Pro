@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Select Seat - BusTransitPro</title>
+    <style>
+        .seat-layout {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .seat {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #fff;
+        }
+        .seat:hover {
+            background-color: #e2f0ff;
+        }
+        .seat.selected {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .seat.booked {
+            background-color: #6c757d;
+            color: white;
+            cursor: not-allowed;
+        }
+        .seat.disabled {
+            opacity: 0;
+            cursor: default;
+        }
+        .bus-front {
+            width: 100%;
+            height: 60px;
+            background-color: #dee2e6;
+            border-radius: 100px 100px 0 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Select Your Seat</h4>
+                        <a href="javascript:history.back()" class="btn btn-sm btn-outline-light">
+                            <i class="bi bi-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- Journey details -->
+                        <div class="alert alert-light mb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="text-primary mb-2" th:text="${schedule.route.source.name + ' to ' + schedule.route.destination.name}"></h5>
+                                    <p class="mb-0">
+                                        <strong>Date:</strong> <span th:text="${#temporals.format(schedule.departureTime, 'EEE, d MMM yyyy')}"></span>
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Time:</strong> <span th:text="${#temporals.format(schedule.departureTime, 'HH:mm')}"></span>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-0">
+                                        <strong>Bus:</strong> <span th:text="${schedule.bus.manufacturer + ' ' + schedule.bus.model}"></span>
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Bus No:</strong> <span th:text="${schedule.bus.registrationNumber}"></span>
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Fare:</strong> <span th:text="${'₹' + schedule.route.fareAmount}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seat selection -->
+                        <div class="row">
+                            <div class="col-lg-7">
+                                <div class="seat-layout">
+                                    <div class="bus-front">
+                                        <i class="bi bi-bus-front me-2"></i> DRIVER
+                                    </div>
+                                    
+                                    <div id="seatContainer">
+                                        <!-- Seats will be generated dynamically by JavaScript -->
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-center mt-3">
+                                    <div class="d-flex align-items-center me-4">
+                                        <div class="seat me-2" style="width: 20px; height: 20px;"></div>
+                                        <span>Available</span>
+                                    </div>
+                                    <div class="d-flex align-items-center me-4">
+                                        <div class="seat selected me-2" style="width: 20px; height: 20px;"></div>
+                                        <span>Selected</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="seat booked me-2" style="width: 20px; height: 20px;"></div>
+                                        <span>Booked</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-5">
+                                <div class="card mt-4 mt-lg-0">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Seat Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="/booking/passenger-details" method="post" id="seatForm">
+                                            <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
+                                            <input type="hidden" name="seatNumber" id="selectedSeatInput" required />
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Selected Seat</label>
+                                                <div class="form-control" id="selectedSeatDisplay">Please select a seat</div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Fare Amount</label>
+                                                <div class="form-control" th:text="${'₹' + schedule.route.fareAmount}"></div>
+                                            </div>
+                                            
+                                            <button type="submit" id="continueBtn" class="btn btn-primary w-100" disabled>
+                                                Continue <i class="bi bi-arrow-right ms-2"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+    
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const busCapacity = [[${schedule.bus.capacity}]];
+            const bookedSeats = [[${bookedSeats}]];
+            
+            const seatContainer = document.getElementById('seatContainer');
+            const selectedSeatInput = document.getElementById('selectedSeatInput');
+            const selectedSeatDisplay = document.getElementById('selectedSeatDisplay');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            // Calculate rows and columns based on capacity
+            const columns = 4; // 2 seats on each side with aisle
+            const rows = Math.ceil(busCapacity / columns);
+            
+            let selectedSeat = null;
+            
+            // Generate seats
+            for (let row = 0; row < rows; row++) {
+                const seatRow = document.createElement('div');
+                seatRow.className = 'seat-row';
+                
+                for (let col = 0; col < columns; col++) {
+                    const seatNumber = row * columns + col + 1;
+                    
+                    if (seatNumber <= busCapacity) {
+                        const seat = document.createElement('div');
+                        seat.className = 'seat';
+                        seat.textContent = seatNumber;
+                        seat.dataset.seatNumber = seatNumber;
+                        
+                        // Check if seat is already booked
+                        if (bookedSeats.includes(seatNumber)) {
+                            seat.classList.add('booked');
+                        } else {
+                            seat.addEventListener('click', function() {
+                                // Deselect previously selected seat
+                                if (selectedSeat) {
+                                    selectedSeat.classList.remove('selected');
+                                }
+                                
+                                // Select this seat
+                                seat.classList.add('selected');
+                                selectedSeat = seat;
+                                
+                                // Update form
+                                selectedSeatInput.value = seatNumber;
+                                selectedSeatDisplay.textContent = 'Seat ' + seatNumber;
+                                continueBtn.disabled = false;
+                            });
+                        }
+                        
+                        seatRow.appendChild(seat);
+                    } else {
+                        // Create empty seat placeholder if we've exceeded capacity
+                        const emptySeat = document.createElement('div');
+                        emptySeat.className = 'seat disabled';
+                        seatRow.appendChild(emptySeat);
+                    }
+                    
+                    // Add aisle after the second seat
+                    if (col === 1) {
+                        const aisle = document.createElement('div');
+                        aisle.style.width = '20px';
+                        seatRow.appendChild(aisle);
+                    }
+                }
+                
+                seatContainer.appendChild(seatRow);
+            }
+            
+            // Form validation
+            document.getElementById('seatForm').addEventListener('submit', function(e) {
+                if (!selectedSeatInput.value) {
+                    e.preventDefault();
+                    alert('Please select a seat to continue.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

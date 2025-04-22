@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Find Your Ticket - BusTransitPro</title>
+</head>
+<body>
+    <div th:replace="user/navbar :: navbar"></div>
+    
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Find Your Ticket</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Alert messages -->
+                        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show">
+                            <span th:text="${param.error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        
+                        <ul class="nav nav-tabs mb-4" id="findTicketTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="booking-reference-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#booking-reference" type="button" role="tab" 
+                                        aria-controls="booking-reference" aria-selected="true">
+                                    <i class="bi bi-ticket me-2"></i>By Booking Reference
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="email-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#email" type="button" role="tab" 
+                                        aria-controls="email" aria-selected="false">
+                                    <i class="bi bi-person me-2"></i>By Email
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="findTicketTabContent">
+                            <!-- Find by Booking Reference -->
+                            <div class="tab-pane fade show active" id="booking-reference" role="tabpanel" aria-labelledby="booking-reference-tab">
+                                <form th:action="@{/booking/find-ticket}" method="post">
+                                    <div class="mb-4">
+                                        <label for="bookingReference" class="form-label">Booking Reference</label>
+                                        <input type="text" id="bookingReference" name="bookingReference" 
+                                               class="form-control form-control-lg" placeholder="e.g. BTP-12AB34CD" required />
+                                        <small class="text-muted">You can find your booking reference in the confirmation email</small>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="email1" class="form-label">Email Address</label>
+                                        <input type="email" id="email1" name="email" 
+                                               class="form-control form-control-lg" placeholder="Enter your email used during booking" required />
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                                        <i class="bi bi-search me-2"></i> Find My Ticket
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Find by Email -->
+                            <div class="tab-pane fade" id="email" role="tabpanel" aria-labelledby="email-tab">
+                                <form th:action="@{/booking/my-bookings}" method="get">
+                                    <div class="mb-4">
+                                        <label for="email2" class="form-label">Email Address</label>
+                                        <input type="email" id="email2" name="email" 
+                                               class="form-control form-control-lg" placeholder="Enter your email used during booking" required />
+                                        <small class="text-muted">We'll show all tickets booked with this email address</small>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                                        <i class="bi bi-search me-2"></i> Find All My Tickets
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+</body>
+</html>

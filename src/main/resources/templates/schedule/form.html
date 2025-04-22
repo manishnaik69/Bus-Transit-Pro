@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/main :: head">
+    <title>Add/Edit Schedule - BusTransitPro</title>
+</head>
+<body>
+    <nav th:replace="layout/main :: nav"></nav>
+    
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0" th:text="${isNew ? 'Add New Schedule' : 'Edit Schedule'}">Add/Edit Schedule</h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/schedules/save}" th:object="${schedule}" method="post">
+                            <!-- Hidden ID for edit mode -->
+                            <input type="hidden" th:field="*{id}" />
+                            
+                            <!-- Route Selection -->
+                            <div class="mb-3">
+                                <label for="route" class="form-label">Route</label>
+                                <select id="route" name="route" class="form-select" required>
+                                    <option value="">-- Select Route --</option>
+                                    <option th:each="route : ${routes}" 
+                                            th:value="${route.id}" 
+                                            th:text="${route.source.name + ' → ' + route.destination.name + ' (' + route.distance + ' km)'}"
+                                            th:selected="${schedule.route != null && route.id == schedule.route.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <!-- Bus Selection -->
+                            <div class="mb-3">
+                                <label for="bus" class="form-label">Bus</label>
+                                <select id="bus" name="bus" class="form-select" required>
+                                    <option value="">-- Select Bus --</option>
+                                    <option th:each="bus : ${buses}" 
+                                            th:value="${bus.id}" 
+                                            th:text="${bus.registrationNumber + ' - ' + bus.manufacturer + ' ' + bus.model + ' (' + bus.capacity + ' seats)'}"
+                                            th:selected="${schedule.bus != null && bus.id == schedule.bus.id}">
+                                    </option>
+                                </select>
+                                <small class="text-muted">Only active buses are shown. Buses under maintenance or retired are excluded.</small>
+                            </div>
+                            
+                            <!-- Driver Name -->
+                            <div class="mb-3">
+                                <label for="driverName" class="form-label">Driver Name</label>
+                                <input type="text" id="driverName" th:field="*{driverName}" 
+                                       class="form-control" required />
+                            </div>
+                            
+                            <!-- Departure Time -->
+                            <div class="mb-3">
+                                <label for="departureTimeString" class="form-label">Departure Time</label>
+                                <input type="datetime-local" id="departureTimeString" name="departureTimeString"
+                                       th:value="${schedule.departureTime != null ? #temporals.format(schedule.departureTime, 'yyyy-MM-dd''T''HH:mm') : ''}" 
+                                       class="form-control" required />
+                            </div>
+                            
+                            <!-- Arrival Time -->
+                            <div class="mb-3">
+                                <label for="arrivalTimeString" class="form-label">Arrival Time</label>
+                                <input type="datetime-local" id="arrivalTimeString" name="arrivalTimeString"
+                                       th:value="${schedule.arrivalTime != null ? #temporals.format(schedule.arrivalTime, 'yyyy-MM-dd''T''HH:mm') : ''}" 
+                                       class="form-control" required />
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" th:field="*{status}" class="form-select" required>
+                                    <option value="Scheduled">Scheduled</option>
+                                    <option value="In-Progress">In-Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Form buttons -->
+                            <div class="d-flex">
+                                <a th:href="@{/schedules}" class="btn btn-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Schedule</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer th:replace="layout/main :: footer"></footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate estimated arrival time based on route duration
+            const routeSelect = document.getElementById('route');
+            const departureInput = document.getElementById('departureTimeString');
+            const arrivalInput = document.getElementById('arrivalTimeString');
+            
+            routeSelect.addEventListener('change', function() {
+                const selectedIndex = this.selectedIndex;
+                if (selectedIndex > 0) {
+                    const routeOption = this.options[selectedIndex];
+                    const routeText = routeOption.text;
+                    const distanceMatch = routeText.match(/\((\d+) km\)/);
+                    
+                    if (distanceMatch && departureInput.value) {
+                        const distance = parseInt(distanceMatch[1]);
+                        // Approximate travel time: 1 hour per 60 km
+                        const travelHours = Math.ceil(distance / 60);
+                        
+                        // Calculate arrival time
+                        const departure = new Date(departureInput.value);
+                        const arrival = new Date(departure.getTime() + (travelHours * 60 * 60 * 1000));
+                        
+                        // Format for datetime-local input (YYYY-MM-DDThh:mm)
+                        const arrivalFormatted = arrival.getFullYear() + 
+                            '-' + String(arrival.getMonth() + 1).padStart(2, '0') + 
+                            '-' + String(arrival.getDate()).padStart(2, '0') + 
+                            'T' + String(arrival.getHours()).padStart(2, '0') + 
+                            ':' + String(arrival.getMinutes()).padStart(2, '0');
+                        
+                        arrivalInput.value = arrivalFormatted;
+                    }
+                }
+            });
+            
+            departureInput.addEventListener('change', function() {
+                if (routeSelect.selectedIndex > 0 && this.value) {
+                    const routeOption = routeSelect.options[routeSelect.selectedIndex];
+                    const routeText = routeOption.text;
+                    const distanceMatch = routeText.match(/\((\d+) km\)/);
+                    
+                    if (distanceMatch) {
+                        const distance = parseInt(distanceMatch[1]);
+                        // Approximate travel time: 1 hour per 60 km
+                        const travelHours = Math.ceil(distance / 60);
+                        
+                        // Calculate arrival time
+                        const departure = new Date(this.value);
+                        const arrival = new Date(departure.getTime() + (travelHours * 60 * 60 * 1000));
+                        
+                        // Format for datetime-local input (YYYY-MM-DDThh:mm)
+                        const arrivalFormatted = arrival.getFullYear() + 
+                            '-' + String(arrival.getMonth() + 1).padStart(2, '0') + 
+                            '-' + String(arrival.getDate()).padStart(2, '0') + 
+                            'T' + String(arrival.getHours()).padStart(2, '0') + 
+                            ':' + String(arrival.getMinutes()).padStart(2, '0');
+                        
+                        arrivalInput.value = arrivalFormatted;
+                    }
+                }
+            });
+            
+            // Validate departure is before arrival
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const departureTime = new Date(departureInput.value);
+                const arrivalTime = new Date(arrivalInput.value);
+                
+                if (departureTime >= arrivalTime) {
+                    e.preventDefault();
+                    alert('Departure time must be before arrival time');
+                }
+            });
+        });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Existing code...
+        
+        // Add event listeners to update available buses when departure/arrival times change
+        departureInput.addEventListener('change', updateAvailableBuses);
+        arrivalInput.addEventListener('change', updateAvailableBuses);
+        
+        function updateAvailableBuses() {
+            if (departureInput.value && arrivalInput.value) {
+                const departure = new Date(departureInput.value).toISOString();
+                const arrival = new Date(arrivalInput.value).toISOString();
+                const scheduleId = document.getElementById('id').value || '';
+                
+                // Make AJAX call to get available buses
+                fetch(`/schedules/api/available-buses?start=${departure}&end=${arrival}&excludeId=${scheduleId}`)
+                    .then(response => response.json())
+                    .then(buses => {
+                        const busSelect = document.getElementById('bus');
+                        const selectedBusId = busSelect.value;
+                        
+                        // Clear bus options except for the first 'Select Bus' option
+                        while (busSelect.options.length > 1) {
+                            busSelect.remove(1);
+                        }
+                        
+                        // Add the new bus options
+                        buses.forEach(bus => {
+                            const option = document.createElement('option');
+                            option.value = bus.id;
+                            option.text = `${bus.registrationNumber} - ${bus.manufacturer} ${bus.model} (${bus.capacity} seats)`;
+                            option.selected = (bus.id == selectedBusId);
+                            busSelect.add(option);
+                        });
+                        
+                        if (buses.length === 0) {
+                            // Add a disabled option to indicate no buses available
+                            const option = document.createElement('option');
+                            option.disabled = true;
+                            option.text = 'No buses available for this time period';
+                            busSelect.add(option);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
