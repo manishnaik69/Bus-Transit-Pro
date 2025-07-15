@@ -43,7 +43,7 @@ public class BookingService {
     public List<Booking> getBookingsByPassengerEmail(String email) {
         return bookingRepository.findByPassengerEmail(email);
     }
-
+    // Create booking needs to have all info about Booking so it can be considered as Creator 
     // Create a new booking with tickets and payment
     public Booking createBooking(Booking booking, List<Ticket> tickets, Payment payment) {
         // Save the booking first
